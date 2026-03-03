@@ -1,0 +1,241 @@
+---
+title: Slider Component
+description: Documentation for the hero slider component with automatic scrolling and touch gestures
+---
+
+## Overview
+
+The slider component displays featured movies in a rotating carousel with automatic transitions, manual navigation controls, and touch/swipe support for mobile devices.
+
+## HTML Structure
+
+The slider is built from `index.html:44-106`:
+
+```html
+<section class="slider-section">
+  <div class="slideshow-container fade">
+    <!-- Slide 1 -->
+    <div class="slideshow-item" style="display: block;">
+      <div class="slideshow-item-description">
+        <div class="slideshow-item-description-container">
+          <span class="movie-title">The Dark Knight</span><br>
+          <span class="movie-info">2008 | Action, Crime | IMDB: 9.0</span><br>
+          <span class="movie-description">When the menace known as the Joker wreaks havoc...</span><br>
+          <a href="./pages/movie.html" tabindex="0" role="button">
+            <button class="movie-read-more">Read More</button>
+          </a>
+        </div>
+      </div>
+      <img class="slider-batman" src="./images/slider/slider-batman.png">
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slideshow-item">
+      <div class="slideshow-item-description">
+        <div class="slideshow-item-description-container">
+          <span class="movie-title">Top Gun: Maverick</span><br>
+          <span class="movie-info">2022 | Action, Drama | IMDB: 8.4</span><br>
+          <span class="movie-description">When the menace known as the Joker...</span><br>
+          <a href="./pages/movie.html" tabindex="0" role="button">
+            <button class="movie-read-more">Read More</button>
+          </a>
+        </div>
+      </div>
+      <img class="slider-maverick" src="./images/slider/slider-maverick.png">
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slideshow-item">
+      <div class="slideshow-item-description">
+        <div class="slideshow-item-description-container">
+          <span class="movie-title">Interstellar</span><br>
+          <span class="movie-info">2014 | Adventure, Sci-Fi | IMDB: 8.6</span><br>
+          <span class="movie-description">When the menace known as the Joker...</span><br>
+          <a href="./pages/movie.html" tabindex="0" role="button">
+            <button class="movie-read-more">Read More</button>
+          </a>
+        </div>
+      </div>
+      <img class="slider-interstellar" src="./images/slider/slider-interstellar.png">
+    </div>
+
+    <!-- Navigation Controls -->
+    <a class="back-button" onclick="previousSlide()">&#10094;</a>
+    <a class="forward-button" onclick="nextSlide()">&#10095;</a>
+    
+    <!-- Dots Navigation -->
+    <div class="slideshow-dots-container">
+      <span class="slideshow-dot" onclick="changeSlide(1)"></span>
+      <span class="slideshow-dot" onclick="changeSlide(2)"></span>
+      <span class="slideshow-dot" onclick="changeSlide(3)"></span>
+    </div>
+  </div>
+</section>
+```
+
+## Slide Structure
+
+<Accordion title="Slide Item">
+  Each slide contains movie information and an image.
+  
+  **Classes:**
+  - `slideshow-item` - Slide wrapper
+  - `slideshow-item-description` - Text content wrapper
+  - `slideshow-item-description-container` - Inner content container
+  - `movie-title` - Movie title text
+  - `movie-info` - Year, genre, and rating
+  - `movie-description` - Movie synopsis
+  - `movie-read-more` - Call-to-action button
+  
+  **Image Classes:** Unique classes for each slide image (e.g., `slider-batman`, `slider-maverick`, `slider-interstellar`)
+</Accordion>
+
+<Accordion title="Navigation Controls">
+  Arrow buttons for manual navigation between slides.
+  
+  **Classes:**
+  - `back-button` - Previous slide arrow (◄)
+  - `forward-button` - Next slide arrow (►)
+  
+  **Functions:** `previousSlide()`, `nextSlide()`
+</Accordion>
+
+<Accordion title="Dots Navigation">
+  Visual indicators showing the current slide position.
+  
+  **Container:** `.slideshow-dots-container`
+  
+  **Dots:** `.slideshow-dot` - Individual dot indicators
+  
+  **Active State:** `.slideshow-enabled` - Applied to the active dot
+  
+  **Function:** `changeSlide(slideNumber)`
+</Accordion>
+
+## JavaScript Functionality
+
+### Core Variables
+
+From `slider.js:6-8`:
+
+```javascript
+const automaticScroll = true;
+const scrollInterval = 5000; // 5 seconds
+let activeSlide = null;
+```
+
+### Automatic Scrolling
+
+From `slider.js:10-12`:
+
+```javascript
+var intervalId = setInterval(() => {
+  if (automaticScroll) nextSlide();
+}, scrollInterval);
+```
+
+<Info>
+  The slider automatically advances every 5 seconds when `automaticScroll` is enabled.
+</Info>
+
+### Navigation Functions
+
+<Accordion title="nextSlide()">
+  Advances to the next slide, looping back to the first slide after the last one.
+  
+  ```javascript
+  function nextSlide() {
+    activeSlide += 1;
+    if (activeSlide > 3) activeSlide = 1;
+    setSlide(activeSlide);
+  }
+  ```
+</Accordion>
+
+<Accordion title="previousSlide()">
+  Goes back to the previous slide, looping to the last slide when on the first.
+  
+  ```javascript
+  function previousSlide() {
+    activeSlide -= 1;
+    if (activeSlide < 1) activeSlide = 3;
+    setSlide(activeSlide);
+  }
+  ```
+</Accordion>
+
+<Accordion title="changeSlide(slide)">
+  Jumps directly to a specific slide (used by dot navigation).
+  
+  ```javascript
+  function changeSlide(slide) {
+    activeSlide = slide;
+    setSlide(slide);
+  }
+  ```
+</Accordion>
+
+<Accordion title="setSlide(slide)">
+  Core function that handles slide transitions and updates the UI.
+  
+  - Resets the automatic scroll interval
+  - Hides all slides
+  - Removes active state from all dots
+  - Shows the selected slide
+  - Activates the corresponding dot
+</Accordion>
+
+### Touch Gestures
+
+From `slider.js:59-89`, the slider supports swipe gestures:
+
+```javascript
+// Initialize touch-points
+let initialTouchX = null;
+let initialTouchY = null;
+
+document.addEventListener('touchstart', (event) => {
+  initialTouchX = event.touches[0].clientX;
+  initialTouchY = event.touches[0].clientY;
+});
+
+// Handle touch-swipe actions
+document.addEventListener('touchmove', (event) => {
+  if (!initialTouchX || !initialTouchY) return;
+
+  const xUp = event.touches[0].clientX;
+  const yUp = event.touches[0].clientY;
+  const xDiff = initialTouchX - xUp;
+  const yDiff = initialTouchY - yUp;
+
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    if (xDiff > 0) {
+      // Swipe left
+      nextSlide();
+    } else {
+      // Swipe right
+      previousSlide();
+    }
+  }
+
+  initialTouchX = null;
+  initialTouchY = null;
+});
+```
+
+<Note>
+  Touch gestures allow mobile users to swipe left/right to navigate between slides.
+</Note>
+
+## Configuration Options
+
+- **automaticScroll:** Enable/disable automatic slide transitions
+- **scrollInterval:** Time between automatic transitions (in milliseconds)
+- **Number of slides:** Currently set to 3 slides
+
+## Customization
+
+To add or remove slides:
+1. Add/remove `.slideshow-item` elements in the HTML
+2. Add/remove corresponding `.slideshow-dot` elements
+3. Update the slide count in `nextSlide()` and `previousSlide()` functions

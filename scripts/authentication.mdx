@@ -1,0 +1,267 @@
+---
+title: Authentication
+description: User registration and login functionality using localStorage for client-side user management
+---
+
+## Overview
+
+The Movie Nachos authentication system provides basic user registration and login capabilities using browser localStorage. This implementation is suitable for demo purposes and learning.
+
+<Warning>
+This authentication system stores passwords in plain text in localStorage. **Never use this in production!** For real applications, implement server-side authentication with proper password hashing and security measures.
+</Warning>
+
+## Registration System
+
+Handles new user account creation with username, email, and password.
+
+### Implementation
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    // Register form action
+    const registerForm = document.getElementById('register-form');
+    const successullyRegistered = document.getElementById('successully-registered');
+
+    registerForm.addEventListener('submit', function (e) {
+        e.preventDefault()
+        let username = e.target.elements.username.value;
+        let email = e.target.elements.email.value;
+        let password = e.target.elements.password.value;
+
+        // Retrieve all users from local storage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        users.push({ username: username, email: email, password: password });
+
+        // Save user data into local storage
+        localStorage.setItem('users', JSON.stringify(users));
+        successullyRegistered.style.display = "block";
+        
+        // Clear all form inputs
+        registerForm.reset();
+    });
+});
+```
+
+### Registration Flow
+
+1. **Prevent default submission**: Stops form from reloading the page
+2. **Extract form data**: Gets username, email, and password from form elements
+3. **Retrieve existing users**: Loads current users array from localStorage
+4. **Add new user**: Pushes new user object to the array
+5. **Save to storage**: Stores updated users array in localStorage
+6. **Show confirmation**: Displays success message
+7. **Reset form**: Clears all input fields
+
+### HTML Requirements
+
+```html
+<form id="register-form">
+  <input type="text" name="username" required />
+  <input type="email" name="email" required />
+  <input type="password" name="password" required />
+  <button type="submit">Register</button>
+</form>
+<div id="successully-registered" style="display: none;">
+  Successfully registered!
+</div>
+```
+
+<Note>
+The confirmation element ID has a typo: `successully-registered` (missing 'l' in 'successfully'). This matches the actual source code.
+</Note>
+
+### User Data Structure
+
+```json
+{
+  "users": [
+    {
+      "username": "john_doe",
+      "email": "john@example.com",
+      "password": "password123"
+    },
+    {
+      "username": "jane_smith",
+      "email": "jane@example.com",
+      "password": "mypassword"
+    }
+  ]
+}
+```
+
+<Warning>
+No duplicate checking is performed. Users can register with the same username multiple times, creating duplicate entries.
+</Warning>
+
+## Login System
+
+Authenticates users by matching credentials against stored user data.
+
+### Implementation
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    // Login form action
+    const loginForm = document.getElementById('login-form');
+    const userNotFound = document.getElementById('user-not-found');
+    const successfullyLoggedIn = document.getElementById('successfully-logged-in');
+
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault()
+        let username = e.target.elements.username.value;
+        let password = e.target.elements.password.value;
+
+        // Retrieve all users from local storage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        users.forEach(user => {
+            // Check if user exists with correct password
+            if (user.username == username && user.password == password) {
+                successfullyLoggedIn.style.display = "block";
+                return;
+            }
+        });
+
+        // If user not found in local storage
+        userNotFound.style.display = "block";
+        return;
+    });
+});
+```
+
+### Login Flow
+
+1. **Prevent default submission**: Stops form from reloading the page
+2. **Extract credentials**: Gets username and password from form
+3. **Load user database**: Retrieves users array from localStorage
+4. **Iterate through users**: Checks each user for matching credentials
+5. **On success**: Shows success message and returns early
+6. **On failure**: Shows error message if no match found
+
+### HTML Requirements
+
+```html
+<form id="login-form">
+  <input type="text" name="username" required />
+  <input type="password" name="password" required />
+  <button type="submit">Login</button>
+</form>
+<div id="successfully-logged-in" style="display: none;">
+  Successfully logged in!
+</div>
+<div id="user-not-found" style="display: none;">
+  User not found or incorrect password!
+</div>
+```
+
+### Authentication Logic
+
+The login check uses loose equality:
+
+```javascript
+if (user.username == username && user.password == password) {
+    successfullyLoggedIn.style.display = "block";
+    return;
+}
+```
+
+<Info>
+Both username and password must match exactly for successful authentication.
+</Info>
+
+## Limitations and Issues
+
+### Security Concerns
+
+- Passwords stored in **plain text**
+- No encryption or hashing
+- Accessible via browser developer tools
+- Vulnerable to XSS attacks
+
+### Functional Limitations
+
+- No duplicate username prevention
+- No email validation
+- No password strength requirements
+- Error message always shows, even on success (due to `forEach` behavior)
+- No session management
+- No logout functionality
+- Form doesn't clear on failed login
+
+<Warning>
+The login success message may not reliably show because the `return` inside `forEach` only exits the callback, not the main function. The error message will still display.
+</Warning>
+
+## Recommended Improvements
+
+For a production-ready system, consider:
+
+### 1. Use `find()` Instead of `forEach()`
+
+```javascript
+const user = users.find(u => u.username === username && u.password === password);
+
+if (user) {
+    successfullyLoggedIn.style.display = "block";
+    userNotFound.style.display = "none";
+} else {
+    userNotFound.style.display = "block";
+    successfullyLoggedIn.style.display = "none";
+}
+```
+
+### 2. Add Duplicate Username Check
+
+```javascript
+const userExists = users.some(u => u.username === username);
+if (userExists) {
+    // Show error: username already taken
+    return;
+}
+```
+
+### 3. Server-Side Authentication
+
+```javascript
+// Example with fetch API
+fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        // Store session token
+        localStorage.setItem('token', data.token);
+    }
+});
+```
+
+### 4. Password Validation
+
+```javascript
+function validatePassword(password) {
+    // Minimum 8 characters, at least one letter and one number
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return regex.test(password);
+}
+```
+
+<Tip>
+For learning purposes, this implementation is fine. For any real application, use established authentication libraries and server-side solutions like JWT, OAuth, or session-based authentication.
+</Tip>
+
+## localStorage Keys
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `users` | Array | Stores all registered user objects with username, email, and password |
+
+## File References
+
+<Info>
+- Registration: `scripts/register.js:1-23`
+- Login: `scripts/login.js:1-27`
+</Info>

@@ -1,0 +1,209 @@
+---
+title: Interactive Image Slider
+description: Learn about the interactive image slider feature with automatic scrolling and touch support
+---
+
+# Interactive Image Slider
+
+The Movie Nachos slider feature provides an interactive image carousel for showcasing featured movies on the homepage. It includes automatic scrolling, manual navigation, and touch/swipe support for mobile devices.
+
+## Features
+
+- **Automatic Scrolling**: Slides change automatically every 5 seconds
+- **Manual Navigation**: Users can navigate using previous/next buttons or dot indicators
+- **Touch Support**: Swipe left or right on mobile devices to navigate
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+
+## Configuration
+
+The slider is configured with the following default settings:
+
+```javascript
+const automaticScroll = true;
+const scrollInterval = 5000; // 5 seconds
+let activeSlide = null;
+```
+
+<Note>
+The slider automatically resets the interval timer when users manually change slides to prevent jarring transitions.
+</Note>
+
+## HTML Structure
+
+The slider container includes slideshow items with movie information and navigation controls:
+
+```html
+<div class="slideshow-container fade">
+  <div class="slideshow-item" style="display: block;">
+    <div class="slideshow-item-description">
+      <div class="slideshow-item-description-container">
+        <span class="movie-title">The Dark Knight</span><br>
+        <span class="movie-info">2008 | Action, Crime | IMDB: 9.0</span><br>
+        <span class="movie-description">When the menace known as the Joker wreaks havoc...</span><br>
+        <a href="./pages/movie.html" tabindex="0" role="button">
+          <button class="movie-read-more">Read More</button>
+        </a>
+      </div>
+    </div>
+    <img class="slider-batman" src="./images/slider/slider-batman.png">
+  </div>
+  
+  <a class="back-button" onclick="previousSlide()">&#10094;</a>
+  <a class="forward-button" onclick="nextSlide()">&#10095;</a>
+  
+  <div class="slideshow-dots-container">
+    <span class="slideshow-dot" onclick="changeSlide(1)"></span>
+    <span class="slideshow-dot" onclick="changeSlide(2)"></span>
+    <span class="slideshow-dot" onclick="changeSlide(3)"></span>
+  </div>
+</div>
+```
+
+## Core Functions
+
+<Tabs>
+  <Tab title="Navigation Functions">
+    ### Next Slide
+    
+    Advances to the next slide in the sequence:
+    
+    ```javascript
+    function nextSlide() {
+      activeSlide += 1;
+      if (activeSlide > 3) activeSlide = 1;
+      setSlide(activeSlide);
+    }
+    ```
+    
+    ### Previous Slide
+    
+    Goes back to the previous slide:
+    
+    ```javascript
+    function previousSlide() {
+      activeSlide -= 1;
+      if (activeSlide < 1) activeSlide = 3;
+      setSlide(activeSlide);
+    }
+    ```
+    
+    ### Change Slide
+    
+    Directly jumps to a specific slide (used by dot indicators):
+    
+    ```javascript
+    function changeSlide(slide) {
+      activeSlide = slide;
+      setSlide(slide);
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Set Slide Function">
+    The main function that handles slide transitions and resets the auto-scroll timer:
+    
+    ```javascript
+    function setSlide(slide) {
+      if (!activeSlide) activeSlide = slide;
+
+      // Reset the interval after manual change of slide
+      clearInterval(intervalId);
+      intervalId = setInterval(() => {
+        if (automaticScroll) nextSlide();
+      }, scrollInterval);
+
+      // Set the correct slide
+      var slides = document.getElementsByClassName('slideshow-item');
+      var dots = document.getElementsByClassName('slideshow-dot');
+      if (slide > slides.length) { slide = 1 }
+      if (slide < 1) { slide = slides.length }
+
+      // Hide and show the correct slide and dot
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = 'none';
+      }
+
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(' slideshow-enabled', '');
+      }
+
+      slides[slide - 1].style.display = 'block';
+      dots[slide - 1].className += ' slideshow-enabled';
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Touch Support
+
+The slider includes touch event handlers for mobile swipe gestures:
+
+<CodeGroup>
+```javascript Touch Start
+// Initialize touch-points
+let initialTouchX = null;
+let initialTouchY = null;
+
+document.addEventListener('touchstart', (event) => {
+  initialTouchX = event.touches[0].clientX;
+  initialTouchY = event.touches[0].clientY;
+});
+```
+
+```javascript Touch Move
+// Handle touch-swipe actions to move to the next or previous slide
+document.addEventListener('touchmove', (event) => {
+  if (!initialTouchX || !initialTouchY) return;
+
+  const xUp = event.touches[0].clientX;
+  const yUp = event.touches[0].clientY;
+  const xDiff = initialTouchX - xUp;
+  const yDiff = initialTouchY - yUp;
+
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    if (xDiff > 0) {
+      // Swipe left
+      nextSlide();
+    } else {
+      // Swipe right
+      previousSlide();
+    }
+  }
+
+  initialTouchX = null;
+  initialTouchY = null;
+});
+```
+</CodeGroup>
+
+<Info>
+The touch handler compares horizontal and vertical movement to determine if the user intended a horizontal swipe, preventing accidental slides during vertical scrolling.
+</Info>
+
+## Initialization
+
+The slider initializes when the DOM content is loaded:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  // Set initial slider when page loads
+  setSlide(1);
+});
+```
+
+## Featured Movies
+
+The slider currently showcases three blockbuster movies:
+
+1. **The Dark Knight** (2008) - Action, Crime | IMDB: 9.0
+2. **Top Gun: Maverick** (2022) - Action, Drama | IMDB: 8.4
+3. **Interstellar** (2014) - Adventure, Sci-Fi | IMDB: 8.6
+
+<Warning>
+Make sure to include the `slider.js` script in your HTML file before the closing body tag to ensure proper functionality.
+</Warning>
+
+## File Location
+
+- **Script**: `~/workspace/source/scripts/slider.js`
+- **HTML**: `~/workspace/source/index.html` (lines 44-105)

@@ -1,0 +1,113 @@
+---
+title: Header Component
+description: Documentation for the header navigation component with responsive burger menu
+---
+
+## Overview
+
+The header component provides the main navigation structure for the Movie Nachos website. It includes a logo, navigation menu, and authentication buttons that adapt responsively for mobile devices.
+
+## HTML Structure
+
+The header is built with the following structure from `index.html:16-41`:
+
+```html
+<header class="header">
+  <div class="logo-container">
+    <a href="./index.html">
+      <img class="logo" src="./images/logo_black_background.png">
+    </a>
+  </div>
+  <a id="burger-menu" class="burger-menu"><i class="fa fa-bars"></i></a>
+  <nav class="menu-nav">
+    <ul id="menu-links" class="menu-links">
+      <li class="menu-item"><a class="menu-link menu-link-active" href="./index.html">Home</a></li>
+      <li class="menu-item"><a class="menu-link" href="./pages/movies.html">Movies</a></li>
+      <li class="menu-item"><a class="menu-link" href="./pages/actors.html">Actors</a></li>
+      <li class="menu-item"><a class="menu-link" href="./pages/news.html">News</a></li>
+      <li class="menu-item login-register-link"><a class="menu-link" href="./pages/login.html">Login</a></li>
+      <li class="menu-item login-register-link"><a class="menu-link" href="./pages/register.html">Register</a></li>
+    </ul>
+  </nav>
+  <div class="header-login-register">
+    <a href="./pages/login.html">
+      <button type="button" class="header-login-register-button">Login</button>
+    </a>
+    <a href="./pages/register.html">
+      <button type="button" class="header-login-register-button">Register</button>
+    </a>
+  </div>
+</header>
+```
+
+## Key Components
+
+<Accordion title="Logo Container">
+  The `.logo-container` holds the site logo that links back to the homepage.
+  
+  **Classes:**
+  - `logo-container` - Container wrapper
+  - `logo` - Logo image styling
+</Accordion>
+
+<Accordion title="Burger Menu">
+  The burger menu appears on mobile devices to toggle the navigation menu.
+  
+  **Element ID:** `burger-menu`
+  
+  **Icon:** Font Awesome bars icon (`fa fa-bars`)
+  
+  The menu toggles between bars and times (X) icons when clicked.
+</Accordion>
+
+<Accordion title="Navigation Menu">
+  The main navigation contains links to all major sections of the site.
+  
+  **Classes:**
+  - `menu-nav` - Navigation wrapper
+  - `menu-links` - Unordered list of menu items
+  - `menu-item` - Individual list items
+  - `menu-link` - Link styling
+  - `menu-link-active` - Active page indicator
+  - `login-register-link` - Special styling for auth links
+</Accordion>
+
+<Accordion title="Authentication Buttons">
+  Desktop-only login and register buttons displayed in the header.
+  
+  **Container:** `.header-login-register`
+  
+  **Button class:** `header-login-register-button`
+</Accordion>
+
+## JavaScript Functionality
+
+The burger menu is controlled by JavaScript in `script.js:20-29`:
+
+```javascript
+const burgerMenu = document.getElementById('burger-menu');
+const menuLinks = document.getElementById('menu-links');
+const burgerIcon = burgerMenu.querySelector('i');
+
+burgerMenu.addEventListener('click', function () {
+  menuLinks.classList.toggle("show-menu");
+  burgerIcon.classList.toggle('fa-times');
+  burgerIcon.classList.toggle('fa-bars');
+});
+```
+
+<Info>
+  The burger menu toggles the `show-menu` class on the menu links and switches the icon between bars and times (X) for open/close states.
+</Info>
+
+## Responsive Behavior
+
+- **Desktop:** Full navigation menu and authentication buttons visible
+- **Mobile:** Burger menu icon visible, navigation hidden until toggled
+- **Active State:** Current page link has the `menu-link-active` class
+
+## Usage Notes
+
+<Note>
+  The header uses Font Awesome 4.7.0 for icons. Ensure the Font Awesome CSS is loaded for proper icon display.
+</Note>

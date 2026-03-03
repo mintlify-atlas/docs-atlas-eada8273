@@ -1,0 +1,176 @@
+---
+title: Footer Component
+description: Documentation for the footer component including newsletter subscription, links, and contact form
+---
+
+## Overview
+
+The footer component provides newsletter subscription, useful links with social media, and a contact form. It's structured in a three-column layout with a bottom copyright section.
+
+## HTML Structure
+
+The footer is built from `index.html:366-421`:
+
+```html
+<footer class="footer">
+  <div class="footer-columns">
+    <!-- Newsletter Column -->
+    <div class="footer-column footer-flexbox">
+      <div class="footer-item-container">
+        <h2>Subscribe to our Newsletter</h2>
+        <p>Our weekly newsletter provides you with the latest and most important happenings in the industry.</p>
+        <form id="subscribe-form" class="subscribe-form" action="#">
+          <input type="text" name="email" class="subscribe-input" placeholder="Enter e-mail adress" required/>
+          <button type="submit" class="subscribe-button">Subscribe</button>
+        </form>
+        <p id="successully-subscribed">You have successully subscribed!</p>
+      </div>
+    </div>
+    
+    <!-- Useful Links Column -->
+    <div class="footer-column footer-flexbox">
+      <div class="footer-item-container">
+        <h2>Usefull Links</h2>
+        <ul class="footer-usefull-links">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./pages/movies.html">Movies</a></li>
+          <li><a href="./pages/actors.html">Actors</a></li>
+          <li><a href="./pages/news.html">News</a></li>
+        </ul>
+        <div class="footer-social-links">
+          <a class="social-link"><i class="fa fa-facebook"></i></a>
+          <a class="social-link"><i class="fa fa-twitter"></i></a>
+          <a class="social-link"><i class="fa fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contact Form Column -->
+    <div class="footer-column footer-flexbox-last">
+      <div class="footer-item-container">
+        <h2>Contact Us</h2>
+        <form id="contact-us-form" action="#">
+          <div class="footer-contact-us-container">
+            <input type="text" name="email" class="contact-us-input" placeholder="Enter e-mail adress" required/>
+          </div>
+          <div class="footer-contact-us-container">
+            <textarea name="message" class="footer-contact-us-textarea" placeholder="Type your message" rows="3" required></textarea>
+            <button type="submit" class="footer-contact-us-button">Send</button>
+          </div>
+        </form>
+        <p id="message-sent">We received your message!</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Copyright Section -->
+  <div class="footer-bottom">
+    <p class="copyright">Copyright &copy; 2023 • <a class="copyright-title" href="./index.html">Movie Nachos</a> • <a class="copyright-author" target="_blank" href="https://www.linkedin.com/in/alpournaras/">@alexpournaras</a></p>
+  </div>
+</footer>
+```
+
+## Footer Columns
+
+<Accordion title="Newsletter Column">
+  The first column contains a newsletter subscription form.
+  
+  **Key Classes:**
+  - `subscribe-form` - Form wrapper
+  - `subscribe-input` - Email input field
+  - `subscribe-button` - Submit button
+  - `#successully-subscribed` - Success message (hidden by default)
+</Accordion>
+
+<Accordion title="Useful Links Column">
+  The middle column displays site navigation links and social media icons.
+  
+  **Key Classes:**
+  - `footer-usefull-links` - Navigation list
+  - `footer-social-links` - Social media container
+  - `social-link` - Individual social icon links
+  
+  **Social Icons:** Facebook, Twitter, Instagram
+</Accordion>
+
+<Accordion title="Contact Form Column">
+  The third column provides a contact form with email and message fields.
+  
+  **Key Classes:**
+  - `footer-contact-us-container` - Input field containers
+  - `contact-us-input` - Email input
+  - `footer-contact-us-textarea` - Message textarea
+  - `footer-contact-us-button` - Send button
+  - `#message-sent` - Success message (hidden by default)
+  
+  **Special Class:** `footer-flexbox-last` on the column for different styling
+</Accordion>
+
+## JavaScript Functionality
+
+### Newsletter Subscription
+
+From `script.js:31-49`:
+
+```javascript
+const subscribeForm = document.getElementById('subscribe-form');
+const subscribeConfirmation = document.getElementById('successully-subscribed');
+
+subscribeForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let email = e.target.elements.email.value;
+
+  // Retrieve subscribed_emails from local storage
+  let subscribed_emails = JSON.parse(localStorage.getItem('subscribed_emails')) || [];
+  subscribed_emails.push(email);
+
+  // Save email into local storage
+  localStorage.setItem('subscribed_emails', JSON.stringify(subscribed_emails));
+  subscribeConfirmation.style.display = "block";
+  
+  // Clear all form inputs
+  subscribeForm.reset();
+});
+```
+
+### Contact Form
+
+From `script.js:51-70`:
+
+```javascript
+const contactUsForm = document.getElementById('contact-us-form');
+const messageSentConfirmation = document.getElementById('message-sent');
+
+contactUsForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let email = e.target.elements.email.value;
+  let message = e.target.elements.message.value;
+
+  // Retrieve all messages from local storage
+  let messages = JSON.parse(localStorage.getItem('messages')) || [];
+  messages.push({ email: email, message: message});
+
+  // Save email and message into local storage
+  localStorage.setItem('messages', JSON.stringify(messages));
+  messageSentConfirmation.style.display = "block";
+  
+  // Clear all form inputs
+  contactUsForm.reset();
+});
+```
+
+<Info>
+  Both forms use localStorage to persist data and display success messages after submission.
+</Info>
+
+## Layout Structure
+
+- **Container:** `.footer-columns` - Wraps all three columns
+- **Columns:** `.footer-column` - Individual column wrapper
+  - `.footer-flexbox` - Applied to first two columns
+  - `.footer-flexbox-last` - Applied to the last column
+- **Bottom:** `.footer-bottom` - Copyright section
+
+<Note>
+  The footer uses a responsive flexbox layout that stacks columns vertically on mobile devices.
+</Note>

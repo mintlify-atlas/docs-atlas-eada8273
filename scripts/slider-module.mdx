@@ -1,0 +1,225 @@
+---
+title: Slider Module
+description: Image slider functionality with automatic scrolling, manual navigation, and touch swipe support
+---
+
+## Overview
+
+The slider module (`scripts/slider.js`) provides a fully-featured slideshow component with automatic transitions, manual controls, and mobile touch gestures.
+
+## Configuration
+
+The slider is configured with two main constants:
+
+```javascript
+const automaticScroll = true;
+const scrollInterval = 5000;
+let activeSlide = null;
+```
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `automaticScroll` | `true` | Enables automatic slide transitions |
+| `scrollInterval` | `5000` | Time between slides in milliseconds (5 seconds) |
+| `activeSlide` | `null` | Tracks the currently displayed slide |
+
+<Tip>
+Change `scrollInterval` to adjust the auto-play speed. Set `automaticScroll` to `false` to disable automatic transitions.
+</Tip>
+
+## Initialization
+
+The slider initializes when the DOM is ready:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial slider when page loads
+    setSlide(1);
+});
+```
+
+<Info>
+The slider starts on slide 1 by default. There are 3 total slides in the slideshow.
+</Info>
+
+## Automatic Scrolling
+
+Automatic slide progression is handled by a setInterval timer:
+
+```javascript
+var intervalId = setInterval(() => {
+    if (automaticScroll) nextSlide();
+}, scrollInterval);
+```
+
+### How It Works
+
+- Checks if `automaticScroll` is enabled
+- Advances to the next slide every 5 seconds
+- Interval is reset when user manually changes slides
+
+## Navigation Functions
+
+### nextSlide()
+
+Advances to the next slide with wraparound:
+
+```javascript
+function nextSlide() {
+    activeSlide += 1;
+    if (activeSlide > 3) activeSlide = 1;
+    setSlide(activeSlide);
+}
+```
+
+<Note>
+When reaching slide 3, the next slide loops back to slide 1.
+</Note>
+
+### previousSlide()
+
+Goes to the previous slide with wraparound:
+
+```javascript
+function previousSlide() {
+    activeSlide -= 1;
+    if (activeSlide < 1) activeSlide = 3;
+    setSlide(activeSlide);
+}
+```
+
+### changeSlide(slide)
+
+Jumps to a specific slide number:
+
+```javascript
+function changeSlide(slide) {
+    activeSlide = slide;
+    setSlide(slide);
+}
+```
+
+<Tip>
+This function is typically called by navigation dots to jump to a specific slide.
+</Tip>
+
+## Core Slide Setter
+
+The `setSlide()` function handles the actual slide transition logic:
+
+```javascript
+function setSlide(slide) {
+    if (!activeSlide) activeSlide = slide;
+
+    // Reset the interval after manual change of slide
+    clearInterval(intervalId);
+    intervalId = setInterval(() => {
+        if (automaticScroll) nextSlide();
+    }, scrollInterval);
+
+    // Set the correct slide
+    var slides = document.getElementsByClassName('slideshow-item');
+    var dots = document.getElementsByClassName('slideshow-dot');
+    if (slide > slides.length) { slide = 1 }
+    if (slide < 1) { slide = slides.length }
+
+    // Hide and show the correct slide and dot
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = 'none';
+    }
+
+    for (let i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(' slideshow-enabled', '');
+    }
+
+    slides[slide - 1].style.display = 'block';
+    dots[slide - 1].className += ' slideshow-enabled';
+}
+```
+
+### Functionality
+
+1. **Resets auto-scroll timer**: Prevents immediate auto-advance after manual navigation
+2. **Validates slide number**: Ensures slide number is within valid range
+3. **Hides all slides**: Sets all slides to `display: none`
+4. **Removes active dot class**: Clears `slideshow-enabled` from all navigation dots
+5. **Shows target slide**: Displays the selected slide and activates its dot
+
+<Warning>
+Slides use 1-based indexing (1, 2, 3) but DOM elements use 0-based indexing, hence `slides[slide - 1]`.
+</Warning>
+
+## Touch Gesture Support
+
+The slider supports swipe gestures for mobile devices.
+
+### Touch Start Detection
+
+```javascript
+let initialTouchX = null;
+let initialTouchY = null;
+
+document.addEventListener('touchstart', (event) => {
+    initialTouchX = event.touches[0].clientX;
+    initialTouchY = event.touches[0].clientY;
+});
+```
+
+### Swipe Detection
+
+```javascript
+document.addEventListener('touchmove', (event) => {
+    if (!initialTouchX || !initialTouchY) return;
+
+    const xUp = event.touches[0].clientX;
+    const yUp = event.touches[0].clientY;
+    const xDiff = initialTouchX - xUp;
+    const yDiff = initialTouchY - yUp;
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 0) {
+            // Swipe left
+            nextSlide();
+        } else {
+            // Swipe right
+            previousSlide();
+        }
+    }
+
+    initialTouchX = null;
+    initialTouchY = null;
+});
+```
+
+### Swipe Logic
+
+- **Swipe left** (xDiff > 0): Advances to next slide
+- **Swipe right** (xDiff < 0): Goes to previous slide
+- Only triggers on horizontal swipes (when `|xDiff| > |yDiff|`)
+- Touch coordinates are reset after each swipe
+
+<Info>
+Touch events are registered on the entire document, making the slider responsive to swipes anywhere on the page.
+</Info>
+
+## HTML Requirements
+
+The slider expects these HTML elements:
+
+```html
+<!-- Slide containers -->
+<div class="slideshow-item">Slide content</div>
+
+<!-- Navigation dots -->
+<span class="slideshow-dot" onclick="changeSlide(1)"></span>
+```
+
+### CSS Classes
+
+- `.slideshow-item`: Individual slide container
+- `.slideshow-dot`: Navigation dot
+- `.slideshow-enabled`: Active state for the current slide's dot
+
+<Note>
+The script references: `scripts/slider.js:1-89`
+</Note>

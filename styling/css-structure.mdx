@@ -1,0 +1,238 @@
+---
+title: "CSS Structure"
+description: "Learn about the CSS organization and styling architecture of Movie Nachos"
+---
+
+## Overview
+
+Movie Nachos uses a **single stylesheet architecture** where all CSS is consolidated into one `style.css` file. This approach simplifies development and ensures consistent styling across the entire application.
+
+## CSS Variables
+
+The project utilizes CSS custom properties (variables) defined at the `:root` level for maintaining a consistent color scheme and design system:
+
+```css
+:root {
+	--main-color: #F37711;
+	--text-color: #fff;
+	--link-color: #5799ef;
+	--red-color: red;
+	--background-color: #121212;
+	--background-light-color: #242323;
+	--background-gray: gray;
+	--linear-gradient: linear-gradient(89deg, #ff4162 0%, #ffa748 100%);
+	--linear-gradient-reverse: linear-gradient(89deg, #ffa748 0%, #ff4162 100%);
+}
+```
+
+<Note>
+The main brand color (#F37711) is an orange shade used throughout the site for accents, hover states, and CTAs.
+</Note>
+
+## Styling Approach
+
+### Component-Based Class Naming
+
+Movie Nachos follows a **component-based naming convention** using BEM-like patterns. Each major UI component has its own class namespace:
+
+```css
+.header { ... }
+.header-login-register { ... }
+.header-login-register-button { ... }
+
+.slider-section { ... }
+.slideshow-container { ... }
+.slideshow-item { ... }
+.slideshow-item-description { ... }
+```
+
+### Global Reset
+
+The stylesheet starts with a global box-sizing reset and base body styles:
+
+```css
+* {
+	box-sizing: border-box
+}
+
+body {
+	background-color: var(--background-color);
+	color: var(--text-color);
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	min-width: 300px;
+}
+```
+
+<Info>
+The minimum width of 300px ensures the site remains usable on very small mobile devices.
+</Info>
+
+## Key CSS Patterns
+
+### Flexbox Layout
+
+Flexbox is the primary layout method used throughout the site:
+
+```css
+.header {
+	display: flex;
+	align-items: center;
+	height: 80px;
+	background-color: var(--background-color);
+	border-bottom: 1px solid var(--main-color);
+}
+
+.featured-movies-container {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+```
+
+### Gradient Buttons
+
+Buttons use CSS linear gradients with hover state reversals:
+
+```css
+.header-login-register-button {
+	background: var(--linear-gradient);
+	border: none;
+	color: var(--text-color);
+	padding: 8px;
+	border-radius: 5px;
+	font-weight: 600;
+	cursor: pointer;
+	min-width: 110px;
+	margin: 6px;
+}
+
+.movie-read-more:hover {
+	background: var(--linear-gradient-reverse);
+}
+```
+
+<Tip>
+The gradient reversal on hover creates a smooth, eye-catching interaction effect.
+</Tip>
+
+### Hover Transformations
+
+Movie and actor cards use scale transformations for visual feedback:
+
+```css
+.featured-movie {
+	transition: transform .2s;
+	text-decoration: none;
+	color: inherit;
+}
+
+.featured-movie:hover {
+	transform: scale(1.02);
+	cursor: pointer;
+}
+
+.featured-movie:hover > .featured-movie-caption > .featured-movie-caption-title {
+	color: var(--main-color);
+}
+```
+
+### Decorative Elements
+
+Section headers use CSS pseudo-elements for decorative lines:
+
+```css
+.section-header h2::after {
+	content: '';
+	height: 1px;
+	width: 50%;
+	display: inline-grid;
+	margin-left: 20px;
+	position: relative;
+	bottom: 9px;
+	background: #f1f1f1;
+}
+```
+
+## Custom Scrollbar
+
+The project includes custom scrollbar styling for webkit browsers:
+
+```css
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+```
+
+## Animations
+
+The slider section uses CSS keyframe animations for smooth transitions:
+
+```css
+.fade {
+	animation-name: fade;
+	animation-duration: 1.4s;
+}
+
+@keyframes fade {
+	from {
+		opacity: .5
+	}
+
+	to {
+		opacity: 2
+	}
+}
+```
+
+## Organization Benefits
+
+<Note>
+**Single Stylesheet Approach:**
+- Simplified deployment (one file to cache)
+- Easy to search and find styles
+- No build process required
+- Clear view of all styles in one place
+
+**Trade-offs:**
+- Larger file size (1645 lines)
+- Potential for specificity conflicts
+- Harder to split code for lazy loading
+</Note>
+
+## File Structure Summary
+
+| Section | Lines | Purpose |
+|---------|-------|--------|
+| Variables & Reset | 1-28 | CSS variables and global resets |
+| Header | 30-127 | Navigation and header styles |
+| Slider | 129-268 | Hero slideshow section |
+| Featured Movies | 270-346 | Featured content grid |
+| Popular/Actors | 347-444 | Two-column layout sections |
+| Footer | 495-653 | Footer and forms |
+| Movies/Actors Pages | 655-1002 | Browse pages with filters |
+| Detail Pages | 866-1001 | Individual movie/actor pages |
+| Login/Register | 1009-1177 | Authentication forms |
+| Media Queries | 1204-1589 | Responsive breakpoints |
+| Animations | 1592-1645 | Custom scrollbar and keyframes |
+
+<Info>
+The CSS file is well-structured with clear comments separating custom media queries from flexbox media queries.
+</Info>

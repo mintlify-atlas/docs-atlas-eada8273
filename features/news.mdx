@@ -1,0 +1,202 @@
+---
+title: News Articles Feature
+description: Stay updated with the latest movie industry news and entertainment updates
+---
+
+# News Articles Feature
+
+The News section provides users with the latest updates from the movie industry, including announcements, award nominations, sequels, and celebrity news.
+
+## Overview
+
+The news feature offers:
+
+- **Article Layout**: Full-width article cards with images and detailed content
+- **Rich Content**: Article titles, images, and multi-paragraph content
+- **Internal Linking**: Links to related movies and actors
+- **Load More**: Pagination to browse through news archives
+- **Responsive Design**: Mobile-friendly article display
+
+## Article Structure
+
+Each news article follows a consistent structure:
+
+```html
+<article class="article-post">
+  <h2 class="article-title">A Role in Don't Look Up Director Adam McKay's Next Movie Could Be Yours for $25,000</h2>
+  <div class="article-image-container">
+    <img src="../images/news/dont_look_up.jpg">
+  </div>
+  <div class="article-content">
+    <p class="article-paragraph">Director <a href="./actor.html" class="article-link">Adam McKay</a> is selling off personal items in an auction...</p>
+    <p class="article-paragraph">The auction features an eclectic mix of items...</p>
+    <p class="article-paragraph">The listing for the walk-on role in McKay's next film project states...</p>
+  </div>
+</article>
+```
+
+## Featured News Articles
+
+### Article 1: Don't Look Up Auction
+
+<Tabs>
+  <Tab title="Headline">
+    **A Role in Don't Look Up Director Adam McKay's Next Movie Could Be Yours for $25,000**
+    
+    Director Adam McKay is auctioning personal items including movie props, comic books, and a unique walk-on role in his next film.
+  </Tab>
+  
+  <Tab title="Content">
+    ```html
+    <p class="article-paragraph">Director <a href="./actor.html" class="article-link">Adam McKay</a> is selling off personal items in an auction to raise money for the Climate Emergency Fund. The "Make Me Regret This" auction features 37 lots, including movie props, comic books, trading cards, and for someone with deep pockets, a walk-on role in his next movie. The estimated final price for the walk-on role is $25,000.</p>
+    
+    <p class="article-paragraph">The auction features an eclectic mix of items, such as baseball cards, vintage wines, first edition comic books, and the Sex Panther prop from Anchorman: The Legend of Ron Burgundy. However, the most unique item being offered is the chance for someone to meet McKay and have a walk-on role in his next film project. As a member of the Climate Emergency Fund Board of Directors, McKay is using his platform to raise awareness about the issue of climate change.</p>
+    ```
+  </Tab>
+</Tabs>
+
+### Article 2: Violent Night Sequel
+
+<Tabs>
+  <Tab title="Headline">
+    **Violent Night 2 Is Happening with Same Writers and Director**
+    
+    The successful holiday action movie gets a sequel with the original creative team returning.
+  </Tab>
+  
+  <Tab title="Content">
+    ```html
+    <p class="article-paragraph">Director <a href="./actor.html" class="article-link">Tommy Wirkola</a> has confirmed that the sequel to the successful holiday action movie, <a href="./movie.html" class="article-link">Violent Night</a>, is officially in the works. The original film, which starred <a href="./actor.html" class="article-link">David Harbour</a> as a badass version of Santa Claus, was well received by audiences and did well at the box office. This led to speculation that a sequel would be announced.</p>
+    
+    <p class="article-paragraph">In an interview with TheWrap, Wirkola confirmed that the process of making Violent Night 2 has begun. The plan is for Harbour to return as Santa Claus, and for the same creative team to be involved on both sides of the camera.</p>
+    ```
+  </Tab>
+</Tabs>
+
+### Article 3: Top Gun Maverick Oscar Nomination
+
+<Tabs>
+  <Tab title="Headline">
+    **Top Gun: Maverick Gets Best Picture Nomination at the Oscars**
+    
+    The legacy sequel achieves critical acclaim with multiple Academy Award nominations.
+  </Tab>
+  
+  <Tab title="Content">
+    ```html
+    <p class="article-paragraph">The 95th Academy Award nominations have included a surprise with the legacy sequel <a href="./movie.html" class="article-link">Top Gun: Maverick</a> receiving a nod for Best Picture. The <a href="./actor.html" class="article-link">Tom Cruise</a> led follow-up to the beloved 1986 classic has seen major success at the box office, grossing $1.489 billion worldwide and making it the second-highest-grossing movie of 2022 and the highest-grossing movie of Cruise's career.</p>
+    
+    <p class="article-paragraph">Top Gun: Maverick will be competing for Best Picture against other films such as <a href="./movie.html" class="article-link">Avatar: The Way of Water</a>, <a href="./movie.html" class="article-link">Elvis</a> and <a href="./movie.html" class="article-link">All Quiet on the Western Front</a>.</p>
+    ```
+  </Tab>
+</Tabs>
+
+## Article Components
+
+<CodeGroup>
+```html Article Title
+<h2 class="article-title">A Role in Don't Look Up Director Adam McKay's Next Movie Could Be Yours for $25,000</h2>
+```
+
+```html Article Image
+<div class="article-image-container">
+  <img src="../images/news/dont_look_up.jpg">
+</div>
+```
+
+```html Article Content
+<div class="article-content">
+  <p class="article-paragraph">Director <a href="./actor.html" class="article-link">Adam McKay</a> is selling off personal items...</p>
+  <p class="article-paragraph">The auction features an eclectic mix of items...</p>
+</div>
+```
+
+```html Article Links
+<a href="./actor.html" class="article-link">Adam McKay</a>
+<a href="./movie.html" class="article-link">Don't Look Up</a>
+```
+</CodeGroup>
+
+## Internal Linking
+
+Articles include contextual links to related content:
+
+- **Actor Links**: Connect to actor profile pages
+- **Movie Links**: Link to movie detail pages
+- **CSS Class**: All links use `article-link` class for consistent styling
+
+<Info>
+Internal linking helps users discover related content and improves SEO.
+</Info>
+
+## Load More Functionality
+
+The news section includes a "More News" button for pagination:
+
+```html
+<div class="show-more-news-container">
+  <a href="./news.html" class="more-news">
+    <button class="more-news-button">More News</button>
+  </a>
+</div>
+```
+
+## News Topics Covered
+
+The platform features news about:
+
+- **Movie Announcements**: Sequels, remakes, and new releases
+- **Award Shows**: Oscar nominations, Golden Globes, BAFTAs
+- **Director News**: Behind-the-scenes stories and projects
+- **Box Office**: Financial performance and milestones
+- **Celebrity Events**: Auctions, charity work, and interviews
+- **Industry Trends**: Climate activism and social causes
+
+## Article Writing Best Practices
+
+<Note>
+All articles follow journalistic standards with:
+- Compelling headlines
+- Strong opening paragraphs
+- Supporting details and quotes
+- Proper attribution and sources
+- Links to related content
+</Note>
+
+## Layout Structure
+
+The news section uses semantic HTML for better accessibility:
+
+```html
+<section class="news-section">
+  <div class="section-header">
+    <h2 class="section-header-title">
+      Latest News
+    </h2>
+  </div>
+  <div class="latest-news-container">
+    <article class="article-post">
+      <!-- Article content -->
+    </article>
+    <!-- More articles -->
+  </div>
+</section>
+```
+
+<Warning>
+Ensure all article images have appropriate alt text for accessibility (to be added in future updates).
+</Warning>
+
+## Responsive Design
+
+The news layout adapts to different screen sizes:
+
+- **Desktop**: Full-width articles with side-by-side image and text
+- **Tablet**: Stacked layout with responsive images
+- **Mobile**: Single column layout optimized for reading
+
+## File Locations
+
+- **HTML**: `~/workspace/source/pages/news.html`
+- **Styles**: `~/workspace/source/style.css`
+- **Images**: `~/workspace/source/images/news/`

@@ -1,0 +1,277 @@
+---
+title: Filter Components
+description: Documentation for movie and actor filter components with dropdown menus and search functionality
+---
+
+## Overview
+
+The filter components provide interactive filtering and searching capabilities for both movies and actors pages. They feature dropdown menus for genre, year, and sorting options, along with keyword search functionality.
+
+## Movie Filters
+
+### HTML Structure
+
+From `movies.html:49-148`:
+
+```html
+<div class="movies-filters">
+  <form class="movies-filters-container" action="./movies.html">
+    <!-- Genre Filter -->
+    <div class="movies-filter-dropdown">
+      <button id="filter-genre" class="movies-filter-dropdown-button">
+        <i class="fa fa-folder-open"></i>
+        Genre: <span>All</span>
+      </button>
+      <ul id="filter-genre-dropdown" class="filter-dropdown">
+        <li><input name="genre[]" type="checkbox" id="genre_action" value="25"><label for="genre_action">Action</label></li>
+        <li><input name="genre[]" type="checkbox" id="genre_adventure" value="17"><label for="genre_adventure">Adventure</label></li>
+        <!-- ... more genres ... -->
+      </ul>
+    </div>
+
+    <!-- Year Filter -->
+    <div class="movies-filter-dropdown movies-filter-dropdown-2-col">
+      <button id="filter-year" class="movies-filter-dropdown-button">
+        <i class="fa fa-calendar"></i>
+        Year: <span>All</span>
+      </button>
+      <ul id="filter-year-dropdown" class="filter-dropdown">
+        <li><input name="release[]" type="checkbox" id="release_2023" value="2023"><label for="release_2023">2023</label></li>
+        <!-- ... more years ... -->
+      </ul>
+    </div>
+
+    <!-- Sort Filter -->
+    <div class="movies-filter-dropdown">
+      <button id="filter-sort" class="movies-filter-dropdown-button">
+        <i class="fa fa-sort"></i>
+        Sort: <span>Default</span>
+      </button>
+      <ul id="filter-sort-dropdown" class="filter-dropdown">
+        <li><input name="sort" id="sort_default" type="radio" value="default" checked="checked"><label for="sort_default">Default</label></li>
+        <li><input name="sort" id="sort_post_date" type="radio" value="post_date"><label for="sort_post_date">Recently Added</label></li>
+        <!-- ... more sort options ... -->
+      </ul>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="movies-filter-submit">
+      <button type="submit" class="movies-filter-submit-button">
+        <i class="fa fa-filter"></i>
+        Filter
+      </button>
+    </div>
+  </form>
+
+  <!-- Search Box -->
+  <div class="movies-search-container">
+    <div class="movies-search">
+      <form class="movies-search-form" autocomplete="off" action="#">
+        <span>
+          <i class="fa fa-search movies-search-icon"></i>
+          <input class="movies-search-input" type="text" name="keyword" placeholder="Enter your keywords..." autocomplete="off">
+        </span>
+      </form>
+    </div>
+  </div>
+</div>
+```
+
+### Movie Filter Dropdowns
+
+<Accordion title="Genre Filter">
+  Multi-select checkbox dropdown for filtering movies by genre.
+  
+  **Button ID:** `filter-genre`
+  
+  **Dropdown ID:** `filter-genre-dropdown`
+  
+  **Available Genres:**
+  - Action, Adventure, Animation, Biography, Costume
+  - Comedy, Crime, Documentary, Drama, Family
+  - Fantasy, Game-Show, History, Horror, Kungfu
+  - Music, Mystery, Reality-TV, Romance, Sci-Fi
+  - Sport, Thriller, TV Show, War, Western
+  
+  **Input Type:** Checkbox (`name="genre[]"`) for multiple selections
+</Accordion>
+
+<Accordion title="Year Filter">
+  Multi-select checkbox dropdown for filtering by release year.
+  
+  **Button ID:** `filter-year`
+  
+  **Dropdown ID:** `filter-year-dropdown`
+  
+  **Special Class:** `movies-filter-dropdown-2-col` for two-column layout
+  
+  **Available Years:**
+  - Individual years from 2023 to 2003
+  - Decade options: 2000s, 1990s, 1980s
+  
+  **Input Type:** Checkbox (`name="release[]"`) for multiple selections
+</Accordion>
+
+<Accordion title="Sort Filter">
+  Single-select radio dropdown for sorting movies.
+  
+  **Button ID:** `filter-sort`
+  
+  **Dropdown ID:** `filter-sort-dropdown`
+  
+  **Sort Options:**
+  - Default
+  - Recently Added
+  - Most Watched
+  - Name
+  - IMDb
+  - Release Date
+  - Site Rating
+  
+  **Input Type:** Radio (`name="sort"`) for single selection
+</Accordion>
+
+### Movie Filter Classes
+
+- `.movies-filters` - Main container
+- `.movies-filters-container` - Form wrapper
+- `.movies-filter-dropdown` - Individual filter wrapper
+- `.movies-filter-dropdown-2-col` - Two-column dropdown variant
+- `.movies-filter-dropdown-button` - Dropdown trigger button
+- `.filter-dropdown` - Dropdown menu list
+- `.movies-filter-submit` - Submit button container
+- `.movies-filter-submit-button` - Submit button
+
+### Movie Search Component
+
+**Classes:**
+- `.movies-search-container` - Search wrapper
+- `.movies-search` - Search box container
+- `.movies-search-form` - Search form
+- `.movies-search-icon` - Search icon (Font Awesome)
+- `.movies-search-input` - Search input field
+
+## Actor Filters
+
+### HTML Structure
+
+From `actors.html:49-82`:
+
+```html
+<div class="actors-filters">
+  <form class="actors-filters-container" action="./actors.html">
+    <!-- Sort Filter -->
+    <div class="actors-filter-dropdown">
+      <button id="filter-sort" class="actors-filter-dropdown-button">
+        <i class="fa fa-sort"></i>
+        Sort: <span>Default</span>
+      </button>
+      <ul id="filter-sort-dropdown" class="filter-dropdown">
+        <li><input name="sort" id="sort_default" type="radio" value="default" checked="checked"><label for="sort_default">Default</label></li>
+        <li><input name="sort" id="sort_post_date" type="radio" value="post_date"><label for="sort_post_date">Recently Added</label></li>
+        <li><input name="sort" id="sort_views" type="radio" value="views"><label for="sort_views">Most Popular</label></li>
+        <li><input name="sort" id="sort_title" type="radio" value="title"><label for="sort_title">Alphabetical</label></li>
+        <li><input name="sort" id="sort_imdb" type="radio" value="imdb"><label for="sort_imdb">IMDb</label></li>
+        <li><input name="sort" id="sort_rated_scores" type="radio" value="rated_scores"><label for="sort_rated_scores">Site Rating</label></li>
+      </ul>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="actors-filter-submit">
+      <button type="submit" class="actors-filter-submit-button">
+        <i class="fa fa-filter"></i>
+        Filter
+      </button>
+    </div>
+  </form>
+
+  <!-- Search Box -->
+  <div class="actors-search-container">
+    <div class="actors-search">
+      <form class="actors-search-form" autocomplete="off" action="#">
+        <span>
+          <i class="fa fa-search actors-search-icon"></i>
+          <input class="actors-search-input" type="text" name="keyword" placeholder="Enter your keywords..." autocomplete="off">
+        </span>
+      </form>
+    </div>
+  </div>
+</div>
+```
+
+### Actor Filter Classes
+
+- `.actors-filters` - Main container
+- `.actors-filters-container` - Form wrapper
+- `.actors-filter-dropdown` - Filter wrapper
+- `.actors-filter-dropdown-button` - Dropdown trigger button
+- `.actors-filter-submit` - Submit button container
+- `.actors-filter-submit-button` - Submit button
+- `.actors-search-container` - Search wrapper
+- `.actors-search-input` - Search input field
+
+<Info>
+  Actor filters are simpler than movie filters, featuring only sort options and search (no genre or year filters).
+</Info>
+
+## JavaScript Functionality
+
+### Dropdown Toggle Logic
+
+From `movies-filters.js:3-33`:
+
+```javascript
+const filterSortBtn = document.getElementById('filter-sort');
+const filterGenreBtn = document.getElementById('filter-genre');
+const filterYearBtn = document.getElementById('filter-year');
+const filterSortDropdown = document.getElementById('filter-sort-dropdown');
+const filterGenreDropdown = document.getElementById('filter-genre-dropdown');
+const filterYearDropdown = document.getElementById('filter-year-dropdown');
+
+filterSortBtn.addEventListener('click', function (e) {
+  e.preventDefault()
+  e.stopPropagation();
+  filterSortDropdown.style.display = "block";
+  filterGenreDropdown.style.display = "none";
+  filterYearDropdown.style.display = "none";
+});
+
+filterGenreBtn.addEventListener('click', function (e) {
+  e.preventDefault()
+  e.stopPropagation();
+  filterGenreDropdown.style.display = "block";
+  filterSortDropdown.style.display = "none";
+  filterYearDropdown.style.display = "none";
+});
+
+filterYearBtn.addEventListener('click', function (e) {
+  e.preventDefault()
+  e.stopPropagation();
+  filterYearDropdown.style.display = "block";
+  filterSortDropdown.style.display = "none";
+  filterGenreDropdown.style.display = "none";
+});
+```
+
+### Close Dropdowns on Outside Click
+
+From `movies-filters.js:35-40`:
+
+```javascript
+document.addEventListener('click', function (e) {
+  if (!filterSortDropdown.contains(e.target)) filterSortDropdown.style.display = "none";
+  if (!filterGenreDropdown.contains(e.target)) filterGenreDropdown.style.display = "none";
+  if (!filterYearDropdown.contains(e.target)) filterYearDropdown.style.display = "none";
+});
+```
+
+<Note>
+  Only one dropdown can be open at a time. Clicking outside any dropdown will close all open dropdowns.
+</Note>
+
+## Usage Guidelines
+
+1. **Single Dropdown:** Only one filter dropdown displays at a time
+2. **Event Prevention:** Click events use `preventDefault()` and `stopPropagation()` to prevent form submission
+3. **Accessibility:** All inputs have associated labels with `for` attributes
+4. **Icons:** Font Awesome icons provide visual context for each filter type

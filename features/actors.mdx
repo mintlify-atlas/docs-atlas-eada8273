@@ -1,0 +1,236 @@
+---
+title: Actor Browsing
+description: Browse and discover actors with filtering and search functionality
+---
+
+# Actor Browsing
+
+The Actors page provides a comprehensive directory of movie actors with filtering, sorting, and search capabilities to help users discover their favorite performers.
+
+## Overview
+
+Key features of the actor browsing system:
+
+- **Sort Options**: Multiple sorting criteria including alphabetical, popularity, and ratings
+- **Search Functionality**: Find actors by name or keywords
+- **Responsive Grid**: Actor cards displayed in a responsive layout
+- **Pagination**: Navigate through extensive actor collections
+- **Actor Profiles**: Each actor card shows image, name, and age
+
+## Filter System
+
+The actor page includes a simplified filter system focused on sorting:
+
+```html
+<div class="actors-filters">
+  <form class="actors-filters-container" action="./actors.html">
+    <div class="actors-filter-dropdown">
+      <button id="filter-sort" class="actors-filter-dropdown-button">
+        <i class="fa fa-sort"></i>
+        Sort: <span>Default</span>
+      </button>
+      <ul id="filter-sort-dropdown" class="filter-dropdown">
+        <li><input name="sort" id="sort_default" type="radio" value="default" checked="checked"><label for="sort_default">Default</label></li>
+        <li><input name="sort" id="sort_post_date" type="radio" value="post_date"><label for="sort_post_date">Recently Added</label></li>
+        <li><input name="sort" id="sort_views" type="radio" value="views"><label for="sort_views">Most Popular</label></li>
+        <li><input name="sort" id="sort_title" type="radio" value="title"><label for="sort_title">Alphabetical</label></li>
+        <li><input name="sort" id="sort_imdb" type="radio" value="imdb"><label for="sort_imdb">IMDb</label></li>
+        <li><input name="sort" id="sort_rated_scores" type="radio" value="rated_scores"><label for="sort_rated_scores">Site Rating</label></li>
+      </ul>
+    </div>
+    <div class="actors-filter-submit">
+      <button type="submit" class="actors-filter-submit-button">
+        <i class="fa fa-filter"></i>
+        Filter
+      </button>
+    </div>
+  </form>
+</div>
+```
+
+## Sort Options
+
+Six different sorting methods are available:
+
+<Tabs>
+  <Tab title="Default">
+    Default sorting order as configured by the platform.
+  </Tab>
+  
+  <Tab title="Recently Added">
+    Shows the most recently added actors first, perfect for discovering new talent on the platform.
+  </Tab>
+  
+  <Tab title="Most Popular">
+    Sorts actors by popularity based on user views and engagement.
+  </Tab>
+  
+  <Tab title="Alphabetical">
+    Organizes actors alphabetically by name for easy browsing.
+  </Tab>
+  
+  <Tab title="IMDb Rating">
+    Sorts actors by their IMDb ratings and scores.
+  </Tab>
+  
+  <Tab title="Site Rating">
+    Uses the internal Movie Nachos rating system.
+  </Tab>
+</Tabs>
+
+## Filter Dropdown JavaScript
+
+The filter dropdown is managed by a simple event handler:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Toggle filter dropdown
+  const filterSortBtn = document.getElementById('filter-sort');
+  const filterSortDropdown = document.getElementById('filter-sort-dropdown');
+
+  filterSortBtn.addEventListener('click', function (e) {
+    e.preventDefault()
+    e.stopPropagation();
+    filterSortDropdown.style.display = "block";
+  });
+
+  // Close dropdown when click elsewhere
+  document.addEventListener('click', function (e) {
+    if (!filterSortDropdown.contains(e.target)) filterSortDropdown.style.display = "none";
+  });
+});
+```
+
+<Info>
+The dropdown automatically closes when users click outside the filter area for better UX.
+</Info>
+
+## Search Functionality
+
+Actors can be searched by keywords:
+
+```html
+<div class="actors-search-container">
+  <div class="actors-search">
+    <form class="actors-search-form" autocomplete="off" action="#">
+      <span>
+        <i class="fa fa-search actors-search-icon"></i>
+        <input class="actors-search-input" type="text" name="keyword" placeholder="Enter your keywords..." autocomplete="off">
+      </span>
+    </form>
+  </div>
+</div>
+```
+
+<Note>
+Autocomplete is disabled to prevent browser suggestions from interfering with the search experience.
+</Note>
+
+## Actor Card Structure
+
+Each actor is displayed with a consistent card layout:
+
+```html
+<div class="actors-container">
+  <a href="../pages/actor.html" tabindex="0" role="button" class="actor-container actor-container-flexbox">
+    <img class="actor-container-image" src="../images/actors/margot_robbie.jpg">
+    <div class="actor-container-caption">
+      <span class="actor-container-caption-title">Margot Robbie</span><br>
+      <span class="actor-container-caption-year">32 years old</span><br>
+    </div>
+  </a>
+  <!-- More actors... -->
+</div>
+```
+
+### Actor Card Components
+
+<CodeGroup>
+```html Image
+<img class="actor-container-image" src="../images/actors/margot_robbie.jpg">
+```
+
+```html Caption
+<div class="actor-container-caption">
+  <span class="actor-container-caption-title">Margot Robbie</span><br>
+  <span class="actor-container-caption-year">32 years old</span><br>
+</div>
+```
+
+```html Link Wrapper
+<a href="../pages/actor.html" tabindex="0" role="button" class="actor-container actor-container-flexbox">
+  <!-- Actor content -->
+</a>
+```
+</CodeGroup>
+
+## Featured Actors
+
+The platform includes profiles for renowned actors such as:
+
+### A-List Stars
+- Margot Robbie
+- Leonardo DiCaprio
+- Tom Cruise
+- Brad Pitt
+- Scarlett Johansson
+- Robert Downey Jr.
+
+### Rising Stars
+- Tom Holland
+- Jenna Ortega
+- Anya Taylor-Joy
+
+### Legendary Performers
+- Nicolas Cage
+- Daniel Craig
+- Ryan Reynolds
+- Will Smith
+- Matt Damon
+- Dwayne Johnson
+
+### Additional Featured Actors
+- Gal Gadot
+- Channing Tatum
+- Sandra Bullock
+- Ben Affleck
+- Jennifer Lawrence
+- Jennifer Aniston
+- Kaley Cuoco
+- Chris Evans
+- Cameron Diaz
+
+## Pagination
+
+Navigate through the actor collection with pagination controls:
+
+```html
+<div class="actors-pagination">
+  <ul class="actors-pagination-container actors-pagination-ul">
+    <li><a href="#">«</a></li>
+    <li><a href="#" class="actors-pagination-active">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">→</a></li>
+    <li><a href="#">»</a></li>
+  </ul>
+</div>
+```
+
+<Warning>
+Ensure the `actors-filters.js` script is included in your HTML file for proper filter functionality.
+</Warning>
+
+## Accessibility Features
+
+- **Tabindex**: All actor cards are keyboard accessible with `tabindex="0"`
+- **Role Attributes**: Actor links include `role="button"` for screen reader compatibility
+- **Semantic HTML**: Proper use of anchor tags and semantic elements
+
+## File Locations
+
+- **HTML**: `~/workspace/source/pages/actors.html`
+- **JavaScript**: `~/workspace/source/scripts/actors-filters.js`
+- **Styles**: `~/workspace/source/style.css`

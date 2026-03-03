@@ -1,0 +1,316 @@
+---
+title: Login and Registration
+description: User authentication system with local storage-based login and registration
+---
+
+# Login and Registration
+
+Movie Nachos includes a client-side authentication system that allows users to register accounts and log in using browser local storage.
+
+## Overview
+
+The authentication system provides:
+
+- **Registration**: Create new user accounts with username, email, and password
+- **Login**: Authenticate existing users
+- **Local Storage**: User data persisted in browser storage
+- **Form Validation**: Client-side validation for required fields
+- **Success Messages**: Visual feedback for successful operations
+- **Error Handling**: User-friendly error messages
+
+<Warning>
+This is a client-side only authentication system using local storage. For production applications, implement server-side authentication with proper security measures.
+</Warning>
+
+## Registration System
+
+### Registration Form
+
+Users can create accounts by providing basic information:
+
+```html
+<form id="register-form" class="register-form" action="#">
+  <input type="text" name="username" placeholder="Username" required/>
+  <input type="email" name="email" placeholder="Email" required/>
+  <input type="password" name="password" placeholder="Password" required/>
+  <button type="submit">Register</button>
+</form>
+<p id="successully-registered">You have successfully registered!</p>
+```
+
+### Registration JavaScript
+
+The registration process stores user data in local storage:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  // Register form action
+  const registerForm = document.getElementById('register-form');
+  const successullyRegistered = document.getElementById('successully-registered');
+
+  registerForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let username = e.target.elements.username.value;
+    let email = e.target.elements.email.value;
+    let password = e.target.elements.password.value;
+
+    // Retrieve all users from local storage
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push({ username: username, email: email, password: password });
+
+    // Save user data into local storage
+    localStorage.setItem('users', JSON.stringify(users));
+    successullyRegistered.style.display = "block";
+    
+    // Clear all form inputs
+    registerForm.reset();
+  });
+});
+```
+
+### Registration Flow
+
+<Tabs>
+  <Tab title="Step 1: Capture Data">
+    ```javascript
+    let username = e.target.elements.username.value;
+    let email = e.target.elements.email.value;
+    let password = e.target.elements.password.value;
+    ```
+    
+    The form submission handler captures user input from the form elements.
+  </Tab>
+  
+  <Tab title="Step 2: Retrieve Users">
+    ```javascript
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    ```
+    
+    Retrieves existing users from local storage or initializes an empty array.
+  </Tab>
+  
+  <Tab title="Step 3: Add New User">
+    ```javascript
+    users.push({ username: username, email: email, password: password });
+    ```
+    
+    Creates a new user object and adds it to the users array.
+  </Tab>
+  
+  <Tab title="Step 4: Save & Reset">
+    ```javascript
+    localStorage.setItem('users', JSON.stringify(users));
+    successullyRegistered.style.display = "block";
+    registerForm.reset();
+    ```
+    
+    Saves updated user data, shows success message, and clears the form.
+  </Tab>
+</Tabs>
+
+<Info>
+The registration system automatically prevents the default form submission behavior to handle the process with JavaScript.
+</Info>
+
+## Login System
+
+### Login Form
+
+Users authenticate with their username and password:
+
+```html
+<form id="login-form" class="login-form" action="#">
+  <input type="text" name="username" placeholder="Username" required/>
+  <input type="password" name="password" placeholder="Password" required/>
+  <button type="submit">Login</button>
+</form>
+<p id="user-not-found">User not found or incorrect password!</p>
+<p id="successfully-logged-in">You have successfully logged in!</p>
+```
+
+### Login JavaScript
+
+The login system validates credentials against stored user data:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  // Login form action
+  const loginForm = document.getElementById('login-form');
+  const userNotFound = document.getElementById('user-not-found');
+  const successfullyLoggedIn = document.getElementById('successfully-logged-in');
+
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let username = e.target.elements.username.value;
+    let password = e.target.elements.password.value;
+
+    // Retrieve all users from local storage
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    users.forEach(user => {
+      // Check if user exists with correct password
+      if (user.username == username && user.password == password) {
+        successfullyLoggedIn.style.display = "block";
+        return;
+      }
+    });
+
+    // If user not found in local storage
+    userNotFound.style.display = "block";
+    return;
+  });
+});
+```
+
+### Login Flow
+
+<CodeGroup>
+```javascript Capture Credentials
+let username = e.target.elements.username.value;
+let password = e.target.elements.password.value;
+```
+
+```javascript Retrieve Users
+let users = JSON.parse(localStorage.getItem('users')) || [];
+```
+
+```javascript Validate Credentials
+users.forEach(user => {
+  // Check if user exists with correct password
+  if (user.username == username && user.password == password) {
+    successfullyLoggedIn.style.display = "block";
+    return;
+  }
+});
+```
+
+```javascript Handle Errors
+// If user not found in local storage
+userNotFound.style.display = "block";
+return;
+```
+</CodeGroup>
+
+## Data Structure
+
+User data is stored in local storage as a JSON array:
+
+```json
+[
+  {
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "password123"
+  },
+  {
+    "username": "jane_smith",
+    "email": "jane@example.com",
+    "password": "securepass456"
+  }
+]
+```
+
+<Warning>
+Passwords are stored in plain text in local storage. This is not secure for production use. Always implement proper password hashing and server-side authentication in real applications.
+</Warning>
+
+## Form Validation
+
+Both forms use HTML5 validation attributes:
+
+- **Required Fields**: All inputs marked as `required`
+- **Email Validation**: Email input uses `type="email"` for validation
+- **Password Field**: Password input uses `type="password"` for masking
+
+## User Experience Features
+
+### Success Messages
+
+<Tabs>
+  <Tab title="Registration Success">
+    ```html
+    <p id="successully-registered">You have successfully registered!</p>
+    ```
+    
+    Displayed when a user successfully creates an account.
+  </Tab>
+  
+  <Tab title="Login Success">
+    ```html
+    <p id="successfully-logged-in">You have successfully logged in!</p>
+    ```
+    
+    Shown when login credentials are validated.
+  </Tab>
+  
+  <Tab title="Login Error">
+    ```html
+    <p id="user-not-found">User not found or incorrect password!</p>
+    ```
+    
+    Displayed when login fails.
+  </Tab>
+</Tabs>
+
+### Form Reset
+
+After successful registration, the form is automatically cleared:
+
+```javascript
+registerForm.reset();
+```
+
+<Note>
+The login form does not reset after submission to allow users to correct typos without re-entering all information.
+</Note>
+
+## Header Navigation
+
+Login and registration links are available in the header:
+
+```html
+<div class="header-login-register">
+  <a href="./pages/login.html">
+    <button type="button" class="header-login-register-button">Login</button>
+  </a>
+  <a href="./pages/register.html">
+    <button type="button" class="header-login-register-button">Register</button>
+  </a>
+</div>
+```
+
+## Security Considerations
+
+<Warning>
+Important security notes for production implementation:
+
+1. **Never store passwords in plain text**
+2. **Implement server-side authentication**
+3. **Use HTTPS for all authentication requests**
+4. **Implement password strength requirements**
+5. **Add CSRF protection**
+6. **Consider using OAuth or other secure authentication methods**
+7. **Implement rate limiting for login attempts**
+8. **Add session management**
+</Warning>
+
+## Future Enhancements
+
+Potential improvements for the authentication system:
+
+- Password strength validation
+- Email verification
+- Password reset functionality
+- Remember me functionality
+- Session management
+- User profile pages
+- Logout functionality
+- Protected routes
+- Server-side integration
+
+## File Locations
+
+- **Login Script**: `~/workspace/source/scripts/login.js`
+- **Register Script**: `~/workspace/source/scripts/register.js`
+- **Login Page**: `~/workspace/source/pages/login.html`
+- **Register Page**: `~/workspace/source/pages/register.html`

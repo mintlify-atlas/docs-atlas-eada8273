@@ -1,0 +1,366 @@
+---
+title: Form Components
+description: Documentation for login, register, contact, and subscribe form components
+---
+
+## Overview
+
+Movie Nachos includes several form components for user authentication and communication. All forms use localStorage for data persistence and display success/error messages.
+
+## Login Form
+
+### HTML Structure
+
+From `login.html:43-84`:
+
+```html
+<section class="login-register-section">
+  <div class="form-container">
+    <div class="forms">
+      <div id="login-form" class="form login">
+        <span class="form-title">Login</span>
+
+        <form id="login-form" action="#">
+          <div class="input-field">
+            <input type="text" name="username" placeholder="Enter your username" required>
+            <i class="fa fa-user"></i>
+          </div>
+          <div class="input-field">
+            <input type="password" class="password" name="password" placeholder="Enter your password" required>
+            <i class="fa fa-lock"></i>
+          </div>
+
+          <div class="checkbox-text">
+            <div class="checkbox-content">
+              <input type="checkbox" id="remember-me">
+              <label for="remember-me" class="form-text">Remember me</label>
+            </div>
+            
+            <a href="#" class="form-text">Forgot password?</a>
+          </div>
+
+          <div class="input-field form-button">
+            <input type="submit">
+          </div>
+        </form>
+
+        <p id="user-not-found">User not found!</p>
+        <p id="successfully-logged-in">You have successully logged in!</p>
+
+        <div class="login-signup">
+          <span class="form-text">Not a member?
+            <a href="./register.html" class="form-text signup-link">Signup Now</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### Login Form Classes
+
+<Accordion title="Container Classes">
+  **Structure:**
+  - `.login-register-section` - Section wrapper
+  - `.form-container` - Form container
+  - `.forms` - Forms wrapper
+  - `.form.login` - Login form wrapper
+</Accordion>
+
+<Accordion title="Input Field Classes">
+  **Classes:**
+  - `.input-field` - Input wrapper with icon
+  - `.password` - Password input styling
+  - `.form-button` - Submit button container
+  
+  **Icons:** Font Awesome user (`fa-user`) and lock (`fa-lock`) icons
+</Accordion>
+
+<Accordion title="Additional Elements">
+  **Classes:**
+  - `.form-title` - Form heading
+  - `.checkbox-text` - Checkbox and link container
+  - `.checkbox-content` - Checkbox wrapper
+  - `.form-text` - Text and link styling
+  - `.login-signup` - Sign up link container
+  - `.signup-link` - Sign up link styling
+  
+  **Message IDs:**
+  - `#user-not-found` - Error message (hidden by default)
+  - `#successfully-logged-in` - Success message (hidden by default)
+</Accordion>
+
+### Login JavaScript
+
+From `login.js:1-27`:
+
+```javascript
+const loginForm = document.getElementById('login-form');
+const userNotFound = document.getElementById('user-not-found');
+const successfullyLoggedIn = document.getElementById('successfully-logged-in');
+
+loginForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let username = e.target.elements.username.value;
+  let password = e.target.elements.password.value;
+
+  // Retrieve all users from local storage
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+
+  users.forEach(user => {
+    // Check if user exists with correct password
+    if (user.username == username && user.password == password) {
+      successfullyLoggedIn.style.display = "block";
+      return;
+    }
+  });
+
+  // If user not found in local storage
+  userNotFound.style.display = "block";
+  return;
+});
+```
+
+<Info>
+  The login form checks credentials against users stored in localStorage and displays appropriate success/error messages.
+</Info>
+
+## Register Form
+
+### HTML Structure
+
+From `register.html:43-90`:
+
+```html
+<section class="login-register-section">
+  <div class="form-container">
+    <div class="forms">
+      <div id="signup-form" class="form signup">
+        <span class="form-title">Registration</span>
+
+        <form id="register-form" action="#">
+          <div class="input-field">
+            <input type="text" name="username" placeholder="Enter your username" required>
+            <i class="fa fa-user"></i>
+          </div>
+          <div class="input-field">
+            <input type="text" name="email" placeholder="Enter your email" required>
+            <i class="fa fa-envelope"></i>
+          </div>
+          <div class="input-field">
+            <input type="password" name="password" class="password" placeholder="Create a password" required>
+            <i class="fa fa-unlock-alt"></i>
+          </div>
+          <div class="input-field">
+            <input type="password" name="password_confirmation" class="password" placeholder="Confirm a password" required>
+            <i class="fa fa-lock"></i>
+          </div>
+
+          <div class="checkbox-text">
+            <div class="checkbox-content">
+              <input type="checkbox" id="accept-terms">
+              <label for="accept-terms" class="form-text">I accepted all terms and conditions</label>
+            </div>
+          </div>
+
+          <div class="input-field form-button">
+            <input type="submit">
+          </div>
+        </form>
+        
+        <p id="successully-registered">You have successully signed up!</p>
+
+        <div class="login-signup">
+          <span class="form-text">Already a member?
+            <a href="./login.html" class="form-text login-link">Login Now</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### Register Form Fields
+
+<Accordion title="Input Fields">
+  The registration form includes four input fields:
+  
+  1. **Username** - `fa-user` icon
+  2. **Email** - `fa-envelope` icon
+  3. **Password** - `fa-unlock-alt` icon
+  4. **Password Confirmation** - `fa-lock` icon
+  
+  All fields are required.
+</Accordion>
+
+<Accordion title="Form Elements">
+  **Wrapper:** `.form.signup`
+  
+  **Additional Elements:**
+  - Terms acceptance checkbox (`#accept-terms`)
+  - Success message (`#successully-registered`)
+  - Login link (`.login-link`)
+</Accordion>
+
+### Register JavaScript
+
+From `register.js:1-23`:
+
+```javascript
+const registerForm = document.getElementById('register-form');
+const successullyRegistered = document.getElementById('successully-registered');
+
+registerForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let username = e.target.elements.username.value;
+  let email = e.target.elements.email.value;
+  let password = e.target.elements.password.value;
+
+  // Retrieve all users from local storage
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  users.push({ username: username, email: email, password: password });
+
+  // Save user data into local storage
+  localStorage.setItem('users', JSON.stringify(users));
+  successullyRegistered.style.display = "block";
+  
+  // Clear all form inputs
+  registerForm.reset();
+});
+```
+
+<Note>
+  The registration form saves user data to localStorage, displays a success message, and resets the form.
+</Note>
+
+## Newsletter Subscribe Form
+
+### HTML Structure
+
+From `index.html:373-377` (in footer):
+
+```html
+<form id="subscribe-form" class="subscribe-form" action="#">
+  <input type="text" name="email" class="subscribe-input" placeholder="Enter e-mail adress" required/>
+  <button type="submit" class="subscribe-button">Subscribe</button>
+</form>
+<p id="successully-subscribed">You have successully subscribed!</p>
+```
+
+### Subscribe Form Classes
+
+- `.subscribe-form` - Form wrapper
+- `.subscribe-input` - Email input field
+- `.subscribe-button` - Submit button
+- `#successully-subscribed` - Success message (hidden by default)
+
+### Subscribe JavaScript
+
+From `script.js:31-49`:
+
+```javascript
+const subscribeForm = document.getElementById('subscribe-form');
+const subscribeConfirmation = document.getElementById('successully-subscribed');
+
+subscribeForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let email = e.target.elements.email.value;
+
+  // Retrieve subscribed_emails from local storage
+  let subscribed_emails = JSON.parse(localStorage.getItem('subscribed_emails')) || [];
+  subscribed_emails.push(email);
+
+  // Save email into local storage
+  localStorage.setItem('subscribed_emails', JSON.stringify(subscribed_emails));
+  subscribeConfirmation.style.display = "block";
+  
+  // Clear all form inputs
+  subscribeForm.reset();
+});
+```
+
+## Contact Form
+
+### HTML Structure
+
+From `index.html:405-413` (in footer):
+
+```html
+<form id="contact-us-form" action="#">
+  <div class="footer-contact-us-container">
+    <input type="text" name="email" class="contact-us-input" placeholder="Enter e-mail adress" required/>
+  </div>
+  <div class="footer-contact-us-container">
+    <textarea name="message" class="footer-contact-us-textarea" placeholder="Type your message" rows="3" required></textarea>
+    <button type="submit" class="footer-contact-us-button">Send</button>
+  </div>
+</form>
+<p id="message-sent">We received your message!</p>
+```
+
+### Contact Form Classes
+
+- `#contact-us-form` - Form ID
+- `.footer-contact-us-container` - Input containers
+- `.contact-us-input` - Email input
+- `.footer-contact-us-textarea` - Message textarea (3 rows)
+- `.footer-contact-us-button` - Send button
+- `#message-sent` - Success message (hidden by default)
+
+### Contact JavaScript
+
+From `script.js:51-70`:
+
+```javascript
+const contactUsForm = document.getElementById('contact-us-form');
+const messageSentConfirmation = document.getElementById('message-sent');
+
+contactUsForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let email = e.target.elements.email.value;
+  let message = e.target.elements.message.value;
+
+  // Retrieve all messages from local storage
+  let messages = JSON.parse(localStorage.getItem('messages')) || [];
+  messages.push({ email: email, message: message});
+
+  // Save email and message into local storage
+  localStorage.setItem('messages', JSON.stringify(messages));
+  messageSentConfirmation.style.display = "block";
+  
+  // Clear all form inputs
+  contactUsForm.reset();
+});
+```
+
+## Common Form Patterns
+
+<Accordion title="Data Storage">
+  All forms use localStorage to persist data:
+  
+  - **Users:** `localStorage.getItem('users')`
+  - **Subscriptions:** `localStorage.getItem('subscribed_emails')`
+  - **Messages:** `localStorage.getItem('messages')`
+</Accordion>
+
+<Accordion title="Form Handling">
+  All forms follow the same pattern:
+  
+  1. Prevent default form submission
+  2. Extract form values
+  3. Retrieve existing data from localStorage
+  4. Add new data
+  5. Save to localStorage
+  6. Display success message
+  7. Reset form (except login)
+</Accordion>
+
+<Accordion title="Validation">
+  HTML5 validation is used with the `required` attribute on all input fields. No custom JavaScript validation is implemented.
+</Accordion>
+
+<Info>
+  All forms use Font Awesome icons for visual enhancement and include proper accessibility labels.
+</Info>

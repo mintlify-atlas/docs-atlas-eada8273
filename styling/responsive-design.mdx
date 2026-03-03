@@ -1,0 +1,364 @@
+---
+title: "Responsive Design"
+description: "Understanding the responsive design implementation and mobile optimization in Movie Nachos"
+---
+
+## Overview
+
+Movie Nachos implements a **desktop-first responsive design** approach using CSS media queries and flexbox-based layouts. The site is fully responsive from 300px to large desktop screens.
+
+## Viewport Configuration
+
+The site uses a comprehensive viewport meta tag to ensure proper rendering on mobile devices:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+```
+
+<Note>
+The `user-scalable=no` setting prevents pinch-to-zoom, which is intentional for this app-like experience but may have accessibility implications.
+</Note>
+
+## Responsive Breakpoints
+
+The CSS uses multiple breakpoints to handle different screen sizes:
+
+### Custom Media Queries
+
+| Breakpoint | Target Devices | Key Changes |
+|------------|----------------|-------------|
+| `max-width: 1300px` | Tablets (landscape) | Reduced padding, smaller font sizes |
+| `max-width: 1100px` | Tablets (portrait) | Stack two-column layouts, full-width search |
+| `max-width: 800px` | Mobile (landscape) | Burger menu appears, hide desktop login buttons |
+| `max-width: 550px` | Mobile (portrait) | Stack poster/trailer, adjust slider text |
+| `max-width: 400px` | Small phones | Minimize form input sizes |
+
+### Flexbox Media Queries
+
+| Breakpoint | Column Layout |
+|------------|---------------|
+| `min-width: 1150px` | Movies: 12.5% (8 columns) |
+| `min-width: 992px` | Featured: 16.67% (6 columns) |
+| `768px - 991px` | Featured: 33.33% (3 columns) |
+| `max-width: 767px` | Featured: 33.33%, Movies: 25% |
+| `max-width: 575px` | Featured: 50% (2 columns) |
+| `max-width: 450px` | Movies: 50% (2 columns) |
+
+<Info>
+The flexbox approach allows for fluid, responsive grids without a CSS framework like Bootstrap or Tailwind.
+</Info>
+
+## Burger Menu Implementation
+
+The burger menu is hidden on desktop and appears on screens below 800px:
+
+### Desktop State
+
+```css
+.burger-menu {
+	display: none;
+	color: var(--main-color);
+	font-size: 30px;
+	cursor: pointer;
+	min-width: 26px;
+}
+```
+
+### Mobile State (< 800px)
+
+```css
+@media (max-width: 800px) {
+	.burger-menu {
+		display: block;
+		float: right;
+		margin-right: 20px;
+	}
+
+	.menu-links {
+		position: absolute;
+		top: 0;
+		background-color: var(--background-color);
+		line-height: 30px;
+		margin-top: 80px;
+		z-index: 1;
+		left: 0;
+		flex-direction: column;
+		width: 100%;
+		align-items: center;
+		display: none;
+	}
+}
+```
+
+### Toggle Functionality
+
+The menu is toggled using JavaScript with a utility class:
+
+```css
+.show-menu {
+	display: flex !important;
+}
+```
+
+<Tip>
+The burger menu slides down from below the header (margin-top: 80px) to create a smooth overlay effect.
+</Tip>
+
+## Mobile Login/Register Pattern
+
+On mobile devices, the header login buttons are hidden and replaced with menu items:
+
+```css
+.login-register-link {
+	display: none;
+}
+
+@media (max-width: 800px) {
+	.header-login-register {
+		display: none;
+	}
+
+	.login-register-link {
+		display: block;
+	}
+}
+```
+
+This ensures authentication options remain accessible without cluttering the mobile header.
+
+## Touch Interactions
+
+The slider implements **swipe gestures** for mobile devices using touch events:
+
+```javascript
+// Initialize touch-points
+let initialTouchX = null;
+let initialTouchY = null;
+
+document.addEventListener('touchstart', (event) => {
+	initialTouchX = event.touches[0].clientX;
+	initialTouchY = event.touches[0].clientY;
+});
+
+// Handle touch-swipe actions to move to the next or previous slide
+document.addEventListener('touchmove', (event) => {
+	if (!initialTouchX || !initialTouchY) return;
+
+	const xUp = event.touches[0].clientX;
+	const yUp = event.touches[0].clientY;
+	const xDiff = initialTouchX - xUp;
+	const yDiff = initialTouchY - yUp;
+
+	if (Math.abs(xDiff) > Math.abs(yDiff)) {
+		if (xDiff > 0) {
+			// Swipe left -> next slide
+			nextSlide();
+		} else {
+			// Swipe right -> previous slide
+			previousSlide();
+		}
+	}
+
+	initialTouchX = null;
+	initialTouchY = null;
+});
+```
+
+<Note>
+The swipe detection compares horizontal vs vertical movement (`Math.abs(xDiff) > Math.abs(yDiff)`) to ensure only horizontal swipes trigger slide changes, preventing conflicts with vertical scrolling.
+</Note>
+
+## Responsive Typography
+
+Font sizes are adjusted across breakpoints for better readability:
+
+```css
+/* Desktop */
+.movie-title {
+	font-size: 45px;
+	font-weight: 900;
+}
+
+/* Mobile (< 550px) */
+@media (max-width: 550px) {
+	.movie-title {
+		font-size: 28px;
+	}
+
+	.movie-title > span {
+		font-size: 10px;
+		font-weight: 300;
+		margin-left: 0px;
+	}
+}
+```
+
+## Responsive Image Handling
+
+The slider uses `object-position` to control focal points on different screen sizes:
+
+```css
+.slider-batman {
+	width: 100%;
+	object-position: 55% 40%;
+}
+
+.slider-maverick {
+	width: 100%;
+	object-position: 70% 55%;
+}
+
+.slider-interstellar {
+	width: 100%;
+	object-position: 90% 55%;
+}
+```
+
+<Tip>
+Using `object-position` ensures important parts of the image remain visible when cropped on different aspect ratios.
+</Tip>
+
+## Layout Transformations
+
+### Two-Column to Stacked (< 1100px)
+
+```css
+.latest-popular-two-columns {
+	display: flex;
+}
+
+@media (max-width: 1100px) {
+	.latest-popular-two-columns {
+		display: block;
+	}
+}
+```
+
+### Poster and Trailer Layout (< 550px)
+
+```css
+/* Desktop: Side by side */
+.movie-poster-trailer {
+	display: flex;
+	max-height: 500px;
+}
+
+.movie-poster-trailer > img {
+	width: 25%;
+	padding: 10px;
+}
+
+.movie-trailer {
+	width: 75%;
+	padding: 10px;
+}
+
+/* Mobile: Stacked */
+@media (max-width: 550px) {
+	.movie-poster-trailer {
+		display: block;
+		max-height: unset;
+	}
+
+	.movie-poster-trailer > img {
+		width: 100%;
+		padding: 0px;
+	}
+
+	.movie-trailer {
+		width: 100%;
+		padding: 10px 0px;
+		height: 300px;
+	}
+}
+```
+
+## Responsive Filters
+
+Filter dropdowns adapt to mobile screens by stacking and expanding to full width:
+
+```css
+@media (max-width: 1100px) {
+	.movies-filters {
+		display: block;
+	}
+
+	.movies-search-container {
+		text-align: left;
+		padding-bottom: 10px;
+	}
+
+	.movies-search-input {
+		width: 100%;
+	}
+
+	.movies-filter-dropdown-button {
+		width: 100%;
+	}
+}
+```
+
+## Cookie Notification Position
+
+The cookie notification adjusts from right-aligned to centered on mobile:
+
+```css
+.cookie-notification {
+	position: fixed;
+	right: 5px;
+	bottom: 10px;
+}
+
+@media (max-width: 800px) {
+	.cookie-notification {
+		left: 5px;
+	}
+}
+```
+
+## Mobile-First Recommendations
+
+<Note>
+**Current Approach:** Desktop-first (styles are defined for desktop, then overridden for mobile)
+
+**Alternative:** A mobile-first approach using `min-width` media queries could reduce CSS specificity issues and improve mobile performance by loading fewer overrides.
+</Note>
+
+## Performance Considerations
+
+### Image Optimization
+- All images are sized appropriately with `width: 100%`
+- `object-fit: cover` maintains aspect ratios without distortion
+- `object-position` optimizes focal points
+
+### Responsive Padding
+
+```css
+/* Desktop */
+.movie-content-section {
+	padding: 20px 200px 0px 200px;
+}
+
+/* Tablet */
+@media (max-width: 1300px) {
+	.movie-content-section {
+		padding: 20px 30px 0px 30px;
+	}
+}
+```
+
+Padding is dramatically reduced on smaller screens to maximize content area.
+
+## Testing Breakpoints
+
+To test the responsive design:
+
+1. **Desktop (> 1300px)**: Full experience with all features visible
+2. **Tablet Landscape (800-1100px)**: Burger menu, stacked layouts
+3. **Mobile Landscape (550-800px)**: Optimized navigation, smaller fonts
+4. **Mobile Portrait (< 550px)**: Full mobile experience, swipe gestures
+5. **Small Phones (< 400px)**: Minimum viable layout
+
+<Info>
+The site maintains a minimum width of 300px to ensure usability on the smallest devices.
+</Info>

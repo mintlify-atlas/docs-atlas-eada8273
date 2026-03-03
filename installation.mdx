@@ -1,0 +1,202 @@
+---
+title: Installation
+description: Step-by-step guide to setting up Movie Nachos on your local machine
+---
+
+# Installation Guide
+
+Get Movie Nachos up and running on your local machine in just a few simple steps. This project is a static website that requires no build process or dependencies.
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- **Git** - For cloning the repository
+- **Web Browser** - Any modern browser (Chrome, Firefox, Safari, Edge)
+- **Local Server** (Optional) - For better development experience
+
+<Note>
+  Movie Nachos is a pure frontend application with no backend dependencies. You can run it directly by opening the HTML files in your browser.
+</Note>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Clone the Repository">
+    Open your terminal and clone the Movie Nachos repository:
+    
+    ```bash
+    git clone https://github.com/alexpournaras/movie-nachos.git
+    ```
+    
+    Navigate into the project directory:
+    
+    ```bash
+    cd movie-nachos
+    ```
+  </Step>
+  
+  <Step title="Open the Project">
+    You have several options to run the project:
+    
+    **Option 1: Direct File Opening**
+    
+    Simply open `index.html` in your web browser:
+    
+    ```bash
+    # On macOS
+    open index.html
+    
+    # On Linux
+    xdg-open index.html
+    
+    # On Windows
+    start index.html
+    ```
+    
+    **Option 2: Using Python's HTTP Server**
+    
+    If you have Python installed, run a local server:
+    
+    ```bash
+    # Python 3
+    python -m http.server 8000
+    
+    # Python 2
+    python -m SimpleHTTPServer 8000
+    ```
+    
+    Then visit `http://localhost:8000` in your browser.
+    
+    **Option 3: Using Node.js http-server**
+    
+    Install and run http-server if you have Node.js:
+    
+    ```bash
+    npx http-server -p 8000
+    ```
+    
+    **Option 4: Using VS Code Live Server**
+    
+    If you use Visual Studio Code:
+    1. Install the "Live Server" extension
+    2. Right-click on `index.html`
+    3. Select "Open with Live Server"
+  </Step>
+  
+  <Step title="Explore the Website">
+    Once the website is running, you can:
+    
+    - Browse the homepage with the auto-rotating movie slider
+    - Navigate to the Movies page to filter by genre and year
+    - Explore the Actors directory
+    - Read the latest entertainment news
+    - Test the registration and login functionality
+    - Subscribe to the newsletter
+    - Send a message via the contact form
+    
+    <Info>
+      All user data (registrations, subscriptions, messages) is stored in your browser's localStorage. Clear your browser data to reset.
+    </Info>
+  </Step>
+  
+  <Step title="Customize (Optional)">
+    Start customizing Movie Nachos to make it your own:
+    
+    - Modify `style.css` to change the visual design
+    - Edit HTML files to add or remove content
+    - Update JavaScript in the `scripts/` directory to modify functionality
+    - Add your own movie images to the `images/` directory
+  </Step>
+</Steps>
+
+## Project Files
+
+After cloning, your directory structure will look like this:
+
+```
+movie-nachos/
+├── index.html              # Homepage with slider and featured movies
+├── style.css               # Main stylesheet (29KB)
+├── script.js               # Core JavaScript functionality
+├── pages/                  # Additional HTML pages
+│   ├── movies.html         # Movies listing with filters
+│   ├── actors.html         # Actors directory
+│   ├── actor.html          # Individual actor page
+│   ├── movie.html          # Individual movie page
+│   ├── news.html           # News page
+│   ├── login.html          # Login form
+│   └── register.html       # Registration form
+├── scripts/                # JavaScript modules
+│   ├── slider.js           # Hero slider functionality
+│   ├── movies-filters.js   # Movie filtering system
+│   ├── actors-filters.js   # Actor filtering system
+│   ├── actors.js           # Actor-related scripts
+│   ├── login.js            # Login form handler
+│   └── register.js         # Registration form handler
+└── images/                 # Image assets
+    ├── actors/             # Actor photos
+    ├── featured/           # Featured movie posters
+    ├── movies/             # Movie thumbnails
+    ├── slider/             # Slider images
+    ├── news/               # News images
+    └── logo.png            # Site logo
+```
+
+## Verifying the Installation
+
+To ensure everything is working correctly:
+
+1. **Check the Homepage**: The hero slider should auto-rotate between The Dark Knight, Top Gun: Maverick, and Interstellar
+2. **Test Navigation**: Click through Movies, Actors, and News pages
+3. **Try Filtering**: On the Movies page, use the Genre, Year, and Sort dropdowns
+4. **Test Forms**: Try subscribing to the newsletter in the footer
+5. **Mobile View**: Resize your browser to test the responsive burger menu
+
+## External Dependencies
+
+Movie Nachos uses one external CDN resource:
+
+```html
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+```
+
+<Note>
+  Font Awesome 4.7.0 is loaded from CDN for icons. An internet connection is required for icons to display properly.
+</Note>
+
+## Browser Compatibility
+
+Movie Nachos works on all modern browsers:
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Opera (latest)
+
+## Troubleshooting
+
+### Images Not Loading
+
+If images don't appear:
+- Ensure you're running from the project root directory
+- Check that the `images/` folder is present
+- Verify file paths are correct (relative paths are used)
+
+### localStorage Issues
+
+If forms aren't saving data:
+- Check that your browser allows localStorage
+- Try a different browser
+- Clear browser cache and try again
+
+### Slider Not Working
+
+If the hero slider doesn't rotate:
+- Check browser console for JavaScript errors
+- Ensure `scripts/slider.js` is loaded
+- Verify JavaScript is enabled in your browser
+
+## Next Steps
+
+Now that you have Movie Nachos installed, explore the [Project Structure](/project-structure) to understand how the code is organized, or start customizing the site to make it your own!

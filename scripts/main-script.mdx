@@ -1,0 +1,176 @@
+---
+title: Main Application Script
+description: Core JavaScript functionality for Movie Nachos including cookie management, responsive menu, and form handling
+---
+
+## Overview
+
+The main application script (`script.js`) handles the core functionality of the Movie Nachos website, including cookie notifications, responsive navigation, newsletter subscriptions, and contact form submissions.
+
+<Info>
+All functionality is initialized when the DOM is fully loaded using the `DOMContentLoaded` event listener.
+</Info>
+
+## Cookie Management
+
+The application uses localStorage to persist cookie acceptance preferences.
+
+### Implementation
+
+```javascript
+const closeCookieBtn = document.getElementById('closeCookie');
+const acceptCookieBtn = document.getElementById('acceptCookie');
+const cookieNotification = document.getElementById('cookieNotification');
+
+if (localStorage.getItem('cookie_accepted') != 'true') {
+    cookieNotification.style.display = "block";
+}
+
+closeCookieBtn.addEventListener('click', function () {
+    cookieNotification.style.display = "none"
+});
+
+acceptCookieBtn.addEventListener('click', function () {
+    localStorage.setItem('cookie_accepted', 'true');
+    cookieNotification.style.display = "none"
+});
+```
+
+### Behavior
+
+- Displays cookie notification if user hasn't accepted cookies
+- Stores acceptance in `localStorage` with key `cookie_accepted`
+- Provides options to close or accept the notification
+
+<Note>
+The cookie notification will reappear on subsequent visits until the user clicks "Accept".
+</Note>
+
+## Responsive Menu
+
+Toggle functionality for mobile navigation menu using a burger icon.
+
+### Implementation
+
+```javascript
+const burgerMenu = document.getElementById('burger-menu');
+const menuLinks = document.getElementById('menu-links');
+const burgerIcon = burgerMenu.querySelector('i');
+
+burgerMenu.addEventListener('click', function () {
+    menuLinks.classList.toggle("show-menu");
+    burgerIcon.classList.toggle('fa-times');
+    burgerIcon.classList.toggle('fa-bars');
+});
+```
+
+### Features
+
+- Toggles menu visibility with `show-menu` class
+- Switches burger icon between bars (☰) and close (×) states
+- Uses Font Awesome icons for visual feedback
+
+## Newsletter Subscription
+
+Handles email subscriptions and stores them in localStorage.
+
+### Implementation
+
+```javascript
+const subscribeForm = document.getElementById('subscribe-form');
+const subscribeConfirmation = document.getElementById('successully-subscribed');
+
+subscribeForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let email = e.target.elements.email.value;
+
+    // Retrieve subscribed_emails from local storage
+    let subscribed_emails = JSON.parse(localStorage.getItem('subscribed_emails')) || [];
+    subscribed_emails.push(email);
+
+    // Save email into local storage
+    localStorage.setItem('subscribed_emails', JSON.stringify(subscribed_emails));
+    subscribeConfirmation.style.display = "block";
+    
+    // Clear all form inputs
+    subscribeForm.reset();
+});
+```
+
+### localStorage Structure
+
+```json
+{
+  "subscribed_emails": ["user1@example.com", "user2@example.com"]
+}
+```
+
+<Warning>
+This implementation stores emails in the browser's localStorage without validation. In production, you should add email validation and send data to a backend service.
+</Warning>
+
+## Contact Form
+
+Processes contact messages and saves them locally.
+
+### Implementation
+
+```javascript
+const contactUsForm = document.getElementById('contact-us-form');
+const messageSentConfirmation = document.getElementById('message-sent');
+
+contactUsForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let email = e.target.elements.email.value;
+    let message = e.target.elements.message.value;
+
+    // Retrieve all messages from local storage
+    let messages = JSON.parse(localStorage.getItem('messages')) || [];
+    messages.push({ email: email, message: message});
+
+    // Save email and message into local storage
+    localStorage.setItem('messages', JSON.stringify(messages));
+    messageSentConfirmation.style.display = "block";
+    
+    // Clear all form inputs
+    contactUsForm.reset();
+});
+```
+
+### localStorage Structure
+
+```json
+{
+  "messages": [
+    {
+      "email": "user@example.com",
+      "message": "Great website!"
+    }
+  ]
+}
+```
+
+<Tip>
+All forms use `preventDefault()` to stop default form submission and handle data client-side.
+</Tip>
+
+## localStorage Keys Reference
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `cookie_accepted` | String | Stores 'true' when user accepts cookies |
+| `subscribed_emails` | Array | List of subscribed email addresses |
+| `messages` | Array | Contact form submissions with email and message |
+
+## Event Listeners
+
+All event listeners are registered within the `DOMContentLoaded` callback:
+
+- **Cookie buttons**: Close and accept cookie notification
+- **Burger menu**: Toggle mobile navigation
+- **Subscribe form**: Handle newsletter subscriptions
+- **Contact form**: Process contact messages
+
+<Info>
+The script references: `script.js:1-71`
+</Info>

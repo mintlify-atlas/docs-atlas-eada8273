@@ -1,0 +1,428 @@
+---
+title: Project Structure
+description: Understanding the file and folder organization of Movie Nachos
+---
+
+# Project Structure
+
+Movie Nachos follows a clean and organized structure that separates HTML pages, JavaScript modules, CSS styles, and image assets. This architecture makes the codebase easy to navigate and maintain.
+
+## Directory Overview
+
+```
+movie-nachos/
+├── index.html              # Main landing page
+├── style.css               # Global styles (29KB)
+├── script.js               # Core JavaScript (71 lines)
+├── README.md               # Project documentation
+├── pages/                  # Additional HTML pages
+├── scripts/                # JavaScript modules
+└── images/                 # Image assets
+```
+
+## Root Files
+
+### index.html
+
+The main entry point and homepage (426 lines) featuring:
+
+- **Hero Slider Section**: Auto-rotating slideshow with 3 featured movies
+- **Featured Movies Grid**: 6 highlighted movies with ratings
+- **Popular Movies Section**: 12 trending films
+- **Actors Sidebar**: 12 featured actors
+- **Cookie Notification**: GDPR-compliant consent banner
+- **Footer**: Newsletter subscription, useful links, and contact form
+
+**Key HTML Structure:**
+
+```html
+<header class="header">
+  <div class="logo-container">...</div>
+  <a id="burger-menu" class="burger-menu">...</a>
+  <nav class="menu-nav">
+    <ul id="menu-links" class="menu-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./pages/movies.html">Movies</a></li>
+      <li><a href="./pages/actors.html">Actors</a></li>
+      <li><a href="./pages/news.html">News</a></li>
+    </ul>
+  </nav>
+</header>
+```
+
+### style.css
+
+The main stylesheet (29KB) containing:
+
+- Global styles and CSS reset
+- Responsive layout with flexbox
+- Component-specific styles (cards, forms, buttons)
+- Media queries for mobile responsiveness
+- Custom animations and transitions
+
+### script.js
+
+Core JavaScript functionality (71 lines) handling:
+
+**Cookie Consent Management:**
+
+```javascript
+const closeCookieBtn = document.getElementById('closeCookie');
+const acceptCookieBtn = document.getElementById('acceptCookie');
+const cookieNotification = document.getElementById('cookieNotification');
+
+if (localStorage.getItem('cookie_accepted') != 'true') {
+  cookieNotification.style.display = "block";
+}
+
+acceptCookieBtn.addEventListener('click', function () {
+  localStorage.setItem('cookie_accepted', 'true');
+  cookieNotification.style.display = "none"
+});
+```
+
+**Burger Menu Toggle:**
+
+```javascript
+const burgerMenu = document.getElementById('burger-menu');
+const menuLinks = document.getElementById('menu-links');
+const burgerIcon = burgerMenu.querySelector('i');
+
+burgerMenu.addEventListener('click', function () {
+  menuLinks.classList.toggle("show-menu");
+  burgerIcon.classList.toggle('fa-times');
+  burgerIcon.classList.toggle('fa-bars');
+});
+```
+
+**Newsletter Subscription:**
+
+```javascript
+const subscribeForm = document.getElementById('subscribe-form');
+subscribeForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let email = e.target.elements.email.value;
+  
+  // Retrieve and update subscribed emails
+  let subscribed_emails = JSON.parse(localStorage.getItem('subscribed_emails')) || [];
+  subscribed_emails.push(email);
+  localStorage.setItem('subscribed_emails', JSON.stringify(subscribed_emails));
+});
+```
+
+## Pages Directory
+
+The `pages/` folder contains 7 HTML pages:
+
+### movies.html (402 lines)
+
+Comprehensive movie listing page featuring:
+
+- **Advanced Filter System**: Genre (25+ categories), Year (2003-2023), Sort options
+- **Search Bar**: Keyword-based movie search
+- **Movie Grid**: 24 movies displayed in a responsive grid
+- **Pagination**: Navigate through multiple pages of results
+
+**Filter Dropdowns:**
+
+```html
+<div class="movies-filter-dropdown">
+  <button id="filter-genre" class="movies-filter-dropdown-button">
+    <i class="fa fa-folder-open"></i>
+    Genre: <span>All</span>
+  </button>
+  <ul id="filter-genre-dropdown" class="filter-dropdown">
+    <li><input name="genre[]" type="checkbox" id="genre_action" value="25">
+        <label for="genre_action">Action</label></li>
+    <!-- More genres... -->
+  </ul>
+</div>
+```
+
+### actors.html (16,577 bytes)
+
+Actor directory with filtering capabilities similar to the movies page.
+
+### movie.html (13,838 bytes)
+
+Individual movie detail page displaying full information about a selected film.
+
+### actor.html (13,822 bytes)
+
+Individual actor profile page with biography and filmography.
+
+### news.html (10,314 bytes)
+
+Entertainment news and updates section.
+
+### login.html (5,872 bytes)
+
+User login form with validation.
+
+### register.html (6,206 bytes)
+
+User registration form with account creation.
+
+## Scripts Directory
+
+The `scripts/` folder contains 6 specialized JavaScript modules:
+
+### slider.js (89 lines)
+
+Controls the hero slider with:
+
+**Automatic Sliding:**
+
+```javascript
+const automaticScroll = true;
+const scrollInterval = 5000;
+let activeSlide = null;
+
+var intervalId = setInterval(() => {
+  if (automaticScroll) nextSlide();
+}, scrollInterval);
+```
+
+**Manual Navigation:**
+
+```javascript
+function nextSlide() {
+  activeSlide += 1;
+  if (activeSlide > 3) activeSlide = 1;
+  setSlide(activeSlide);
+}
+
+function previousSlide() {
+  activeSlide -= 1;
+  if (activeSlide < 1) activeSlide = 3;
+  setSlide(activeSlide);
+}
+```
+
+**Touch Swipe Support:**
+
+```javascript
+document.addEventListener('touchmove', (event) => {
+  const xDiff = initialTouchX - xUp;
+  if (xDiff > 0) {
+    nextSlide(); // Swipe left
+  } else {
+    previousSlide(); // Swipe right
+  }
+});
+```
+
+### movies-filters.js (41 lines)
+
+Manages the movie filtering dropdown menus:
+
+```javascript
+const filterSortBtn = document.getElementById('filter-sort');
+const filterGenreBtn = document.getElementById('filter-genre');
+const filterYearBtn = document.getElementById('filter-year');
+
+filterGenreBtn.addEventListener('click', function (e) {
+  e.preventDefault()
+  e.stopPropagation();
+  filterGenreDropdown.style.display = "block";
+  filterSortDropdown.style.display = "none";
+  filterYearDropdown.style.display = "none";
+});
+
+// Close dropdowns when clicking elsewhere
+document.addEventListener('click', function (e) {
+  if (!filterSortDropdown.contains(e.target)) 
+    filterSortDropdown.style.display = "none";
+});
+```
+
+### login.js (27 lines)
+
+Handles user authentication:
+
+```javascript
+const loginForm = document.getElementById('login-form');
+
+loginForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let username = e.target.elements.username.value;
+  let password = e.target.elements.password.value;
+  
+  // Retrieve all users from localStorage
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  
+  users.forEach(user => {
+    if (user.username == username && user.password == password) {
+      successfullyLoggedIn.style.display = "block";
+      return;
+    }
+  });
+});
+```
+
+### register.js (23 lines)
+
+Handles user registration:
+
+```javascript
+const registerForm = document.getElementById('register-form');
+
+registerForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  let username = e.target.elements.username.value;
+  let email = e.target.elements.email.value;
+  let password = e.target.elements.password.value;
+  
+  // Store user data in localStorage
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  users.push({ username: username, email: email, password: password });
+  localStorage.setItem('users', JSON.stringify(users));
+});
+```
+
+### actors-filters.js (568 bytes)
+
+Manages actor filtering functionality similar to movies-filters.js.
+
+### actors.js (428 bytes)
+
+Handles actor-specific interactions and data loading.
+
+## Images Directory
+
+The `images/` folder is organized into subdirectories:
+
+### Directory Structure
+
+```
+images/
+├── actors/                 # Actor profile photos
+│   ├── margot_robbie.jpg
+│   ├── nicolas_cage.png
+│   ├── tom_cruise.jpg
+│   ├── leonardo-dicaprio.jpg
+│   └── ... (more actors)
+├── featured/               # Featured movie posters
+│   ├── godzilla_poster.png
+│   ├── batman_poster.png
+│   ├── black_widow_poster.png
+│   └── ... (6 featured posters)
+├── movies/                 # Movie thumbnails
+│   ├── fast_and_furious.jpg
+│   ├── tenet.jpg
+│   ├── inception.jpg
+│   └── ... (24+ movie images)
+├── slider/                 # Hero slider images
+│   ├── slider-batman.png
+│   ├── slider-maverick.png
+│   └── slider-interstellar.png
+├── news/                   # News article images
+├── favicon.ico             # Site favicon (84KB)
+├── logo.png                # Main logo (28KB)
+├── logo_black_background.png  # Logo variant (54KB)
+└── login_register_background.jpg  # Auth pages background (1MB)
+```
+
+<Info>
+  All images are included in the repository, with a total of 50+ assets across different categories.
+</Info>
+
+## Data Storage Architecture
+
+Movie Nachos uses browser localStorage for client-side data persistence:
+
+### localStorage Keys
+
+- `cookie_accepted` - Boolean for cookie consent status
+- `subscribed_emails` - Array of newsletter subscribers
+- `messages` - Array of contact form submissions
+- `users` - Array of registered user objects
+
+### Example Data Structure
+
+```javascript
+// User object
+{
+  username: "johndoe",
+  email: "john@example.com",
+  password: "secret123"
+}
+
+// Message object
+{
+  email: "user@example.com",
+  message: "This is a great website!"
+}
+```
+
+## Navigation Flow
+
+```
+index.html (Homepage)
+├── pages/movies.html (Browse all movies)
+│   └── pages/movie.html (Individual movie details)
+├── pages/actors.html (Browse all actors)
+│   └── pages/actor.html (Individual actor profile)
+├── pages/news.html (Entertainment news)
+├── pages/login.html (User login)
+└── pages/register.html (Create account)
+```
+
+## Key Design Patterns
+
+### Event-Driven Architecture
+
+All JavaScript modules use the `DOMContentLoaded` event to ensure safe DOM manipulation:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize components after DOM is ready
+});
+```
+
+### Modular JavaScript
+
+Each page loads only the scripts it needs:
+
+```html
+<!-- index.html -->
+<script src="./script.js"></script>
+<script src="./scripts/slider.js"></script>
+<script src="./scripts/actors.js"></script>
+
+<!-- pages/movies.html -->
+<script src="../script.js"></script>
+<script src="../scripts/movies-filters.js"></script>
+```
+
+### Responsive Design
+
+The viewport meta tag ensures mobile optimization:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+```
+
+## External Dependencies
+
+Movie Nachos has minimal external dependencies:
+
+- **Font Awesome 4.7.0** (CDN) - Icon library for UI elements
+
+```html
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+```
+
+<Note>
+  No build tools, package managers, or frameworks are required. The project runs entirely with vanilla HTML, CSS, and JavaScript.
+</Note>
+
+## Best Practices Observed
+
+1. **Separation of Concerns**: HTML structure, CSS styling, and JavaScript behavior are properly separated
+2. **Semantic HTML**: Proper use of semantic tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`)
+3. **Accessibility**: Form labels, ARIA roles, and keyboard navigation support
+4. **Progressive Enhancement**: Core functionality works without JavaScript
+5. **Mobile-First**: Responsive design adapts to all screen sizes
+
+This clean structure makes Movie Nachos an excellent project for learning frontend development fundamentals or as a starting point for building your own movie browsing application.
