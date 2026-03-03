@@ -171,6 +171,40 @@ All event listeners are registered within the `DOMContentLoaded` callback:
 - **Subscribe form**: Handle newsletter subscriptions
 - **Contact form**: Process contact messages
 
+## Actors Column Height Utility
+
+The `actors.js` utility script manages the responsive height of the actors column on the homepage to match the popular movies section.
+
+### Implementation
+
+```javascript
+// Call the function when the page loads
+window.addEventListener("load", setRightColumnHeight);
+
+// Call the function when the window is resized
+window.addEventListener("resize", setRightColumnHeight);
+
+function setRightColumnHeight() {
+    const leftColumn = document.querySelector('.popular-movies');
+    const rightColumn = document.querySelector('.actors');
+    
+    rightColumn.style.maxHeight = (leftColumn.offsetHeight - 10) + "px";
+}
+```
+
+### Functionality
+
+This script ensures the actors sidebar on the homepage stays aligned with the popular movies grid by:
+
+1. **On page load**: Sets initial height after content is rendered
+2. **On window resize**: Recalculates height when viewport changes
+3. **Dynamic calculation**: Matches left column height minus 10px spacing
+
+<Tip>
+The 10px offset accounts for padding or spacing to prevent overflow issues.
+</Tip>
+
 <Info>
-The script references: `script.js:1-71`
+- Main script reference: `script.js:1-71`
+- Actors utility reference: `scripts/actors.js:1-12`
 </Info>
