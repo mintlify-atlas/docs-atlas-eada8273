@@ -1,0 +1,93 @@
+{
+  "projectType": "frontend",
+  "projectName": "Movie Nachos",
+  "projectDescription": "A responsive movie browsing website featuring movies, actors, news articles, and user authentication.",
+  "theme": "almond",
+  "primaryColor": "#E53935",
+  "lightColor": "#FF6F61",
+  "darkColor": "#C62828",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "project-structure"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/slider",
+              "features/movies",
+              "features/actors",
+              "features/news",
+              "features/authentication"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "components/header",
+              "components/footer",
+              "components/slider",
+              "components/filters",
+              "components/forms"
+            ]
+          },
+          {
+            "group": "Styling",
+            "pages": [
+              "styling/css-structure",
+              "styling/responsive-design"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Scripts",
+        "groups": [
+          {
+            "group": "JavaScript Modules",
+            "pages": [
+              "scripts/main-script",
+              "scripts/slider-module",
+              "scripts/filters",
+              "scripts/authentication"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Interactive image slider with touch swipe support",
+    "Movie and actor browsing with filtering capabilities",
+    "User authentication and registration with localStorage",
+    "Responsive navigation menu with burger menu",
+    "Newsletter subscription and contact forms",
+    "Cookie consent management",
+    "News articles about movies and actors"
+  ],
+  "publicApiSurface": [
+    "script.js - Main application logic (menu, cookie, forms)",
+    "scripts/slider.js - Slider navigation and touch controls",
+    "scripts/movies-filters.js - Movie filtering and sorting",
+    "scripts/actors-filters.js - Actor filtering",
+    "scripts/login.js - User login functionality",
+    "scripts/register.js - User registration functionality",
+    "index.html - Home page",
+    "pages/movies.html - Movies listing page",
+    "pages/actors.html - Actors listing page",
+    "pages/movie.html - Individual movie details",
+    "pages/actor.html - Individual actor details",
+    "pages/news.html - News articles page",
+    "pages/login.html - Login page",
+    "pages/register.html - Registration page",
+    "style.css - Global stylesheet"
+  ]
+}
